@@ -123,3 +123,17 @@ Environment correction:
 - The dumped aggregate was `b=4615`.
 - Accepted Better Save Soul Rebalance source records the exact stock baseline: the mod adds 150 + 200 + 250 + 300 = 900 blue to four Soul technology prices while leaving `soul_writing_additions` at 10 blue.
 - Therefore the reconstructed vanilla Graveyard Keeper 1.407 aggregate technology-tree blue cost for this all-DLC dataset is **3715 blue**.
+
+
+## BGCR Blue Economy Dump 0.4.0
+
+- Purpose: enumerate all positive-blue native `CraftDefinition.output` sources needed to verify recovery paths after finite grave-craft mastery.
+- Status: **source prepared; CI/runtime evidence pending**.
+- Research branch: `research/vanilla-balance-dump`.
+- Safety: read-only, no Harmony patches, no game/save mutation.
+- Evidence target:
+  1. no `BGCR_BLUE_ECON_ERROR`;
+  2. one complete dump ending in `BGCR_BLUE_ECON_DONE`;
+  3. all logged rows have positive native blue output;
+  4. rows contain enough classification data to distinguish Survey/one-time, ordinary visible repeatable, hidden/scripted and automatic sources;
+  5. non-grave repeatable fallback paths can be identified without community-value reconstruction.
