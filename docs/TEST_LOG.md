@@ -238,15 +238,16 @@ Probe acceptance target is satisfied for the project decision. No follow-up runt
 
 - Status: **CI-built; runtime acceptance pending**.
 - Branch: `dev/0.1.0`.
-- Exact built source: `1eb7145f1c160ac95486771c336198f397255060`.
-- CI run: `36355076332`.
-- Artifact ID: `10943586956`.
-- GitHub artifact: `BetterGraveCraftingRewards-0.1.0-1eb7145f1c160ac95486771c336198f397255060`.
+- Exact handed source: `3c8b9c744ee77f51ebfb9b60bbf57b6acc2e24a9`.
+- CI run: `36355295391`.
+- Artifact ID: `10944090446`.
+- GitHub artifact: `BetterGraveCraftingRewards-0.1.0-3c8b9c744ee77f51ebfb9b60bbf57b6acc2e24a9`.
 - Handoff DLL: `BetterGraveCraftingRewards-0.1.0.dll`.
 - Installed assembly identity: `BetterGraveCraftingRewards.dll`.
-- DLL SHA-256: `84a74e4d890b6922ce0a8d2363bf74227019ff63144d7f6e3fb3a72f2913c9aa`.
-- Artifact ZIP digest: `sha256:a22628af690118eac75e99b315760cd4021902f0e6e5dc095383f2282f6e9f70`.
+- DLL SHA-256: `8b5a7f48fcef478bb8638e0a91c223d13f28d57fa1b2ea180d3cae2cd7ebced3`.
+- Artifact ZIP digest: `sha256:64c1a8de8e3f9ad8fe9f2a54c8df3b09af20eabd1842bb0a2b9b29a6976b4ba3`.
 - Build result: success.
+- Earlier internal build from source `1eb7145...` was superseded before user handoff after static review found the Soul Gratitude mastery bypass; it is not an accepted/handed candidate.
 
 ### Included behavior
 
@@ -256,6 +257,9 @@ Probe acceptance target is satisfied for the project decision. No follow-up runt
 - save-native mastery counters;
 - equivalent manufacturing variants share one design counter;
 - baseline guards against conflicting R/B reward mods;
+- player, auto, and Soul Gratitude completions that natively award tech points consume mastery;
+- ordinary zombie/worker crafts that strip tech-point output do not consume mastery;
+- bounded `BGCR_MASTERY` diagnostics record completed count, awarded R/B and next R/B until mastery exhaustion;
 - zero-reward endpoint uses stable native r/b output entries;
 - Marble sarcophagus excluded;
 - qualitative Study-value tooltip cue **not included**.
@@ -269,7 +273,7 @@ Phase 1 — one early design, minimal proof:
 4. expected manufacturing sequence: `5R/5B, 5R/5B, 4R/4B, 4R/4B`;
 5. save/reload;
 6. next copy should continue at `3R/3B`, not reset to 5/5;
-7. return `LogOutput.log`.
+7. return `LogOutput.log`; expected diagnostic rows are `BGCR_MASTERY|design=grave_bot_stn_1|completed=1..4`, with awarded sequence `5/5, 5/5, 4/4, 4/4` and next reward after the fourth craft `3/3`.
 
 Phase 2 — after Phase 1 passes:
 - verify one formerly zero-blue Marble recipe starts at its G2 value;
