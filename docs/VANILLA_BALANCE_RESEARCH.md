@@ -603,3 +603,12 @@ Because:
 - Study already provides large one-time red rewards elsewhere;
 
 there is no systemic need for grave-decoration manufacturing itself to retain an infinite red tail.
+
+
+## Dead-data boundary — Marble sarcophagus
+
+Accepted runtime data contains `grave_top_sarcofag_mrb_1` (quality 10) and its Study row, but no owning technology was found in the accepted technology dump.
+
+External community documentation identifies the Marble sarcophagus as **Not Implemented**.
+
+Project balance scope therefore treats it as a loaded dead-data row rather than a player-facing progression item. It is excluded from the current production balance candidate unless stronger host evidence later proves it is obtainable in Graveyard Keeper 1.407.
