@@ -14,8 +14,8 @@ namespace NikichMods.BGCRBalanceDump
     public sealed class BalanceDumpPlugin : BaseUnityPlugin
     {
         public const string PluginGuid = "nikich.graveyardkeeper.bgcrbalancedump";
-        public const string PluginName = "BGCR Blue Economy Dump";
-        public const string PluginVersion = "0.4.0";
+        public const string PluginName = "BGCR Red Economy Dump";
+        public const string PluginVersion = "0.5.0";
 
         private static readonly BindingFlags Inst = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         private static readonly BindingFlags Stat = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
@@ -30,7 +30,7 @@ namespace NikichMods.BGCRBalanceDump
 
         private void Awake()
         {
-            Logger.LogInfo("BGCR Blue Economy Dump 0.4.0 loaded. Read-only research probe.");
+            Logger.LogInfo("BGCR Red Economy Dump 0.5.0 loaded. Read-only research probe.");
             StartCoroutine(DumpWhenReady());
         }
 
@@ -54,7 +54,7 @@ namespace NikichMods.BGCRBalanceDump
                             }
                             catch (Exception ex)
                             {
-                                Logger.LogError("BGCR_BLUE_ECON_ERROR|" + Escape(ex.ToString()));
+                                Logger.LogError("BGCR_RED_ECON_ERROR|" + Escape(ex.ToString()));
                             }
 
                             _dumped = true;
@@ -71,29 +71,31 @@ namespace NikichMods.BGCRBalanceDump
         {
             IList crafts = Get(balance, "craft_data") as IList;
             IList techs = Get(balance, "techs_data") as IList;
+            IList works = Get(balance, "works_data") as IList;
+            IList objects = Get(balance, "objs_data") as IList;
 
-            if (crafts == null || techs == null)
-                throw new InvalidOperationException("GameBalance craft_data/techs_data not available.");
+            if (crafts == null || techs == null || works == null || objects == null)
+                throw new InvalidOperationException("Required GameBalance collections are not available.");
 
-            Logger.LogInfo("BGCR_BLUE_ECON_BEGIN|probe=0.4.0|target=GraveyardKeeper-1.407|source=loaded-GameBalance");
+            Logger.LogInfo("BGCR_RED_ECON_BEGIN|probe=0.5.0|target=GraveyardKeeper-1.407|source=loaded-GameBalance");
 
-            int total = 0;
+            int craftSources = 0;
             int surveys = 0;
-            int ordinaryRepeatableVisible = 0;
             int oneTime = 0;
             int hidden = 0;
-            double bluePerOnePass = 0d;
+            int ordinaryRepeatableVisible = 0;
+            double craftOnePassRed = 0d;
 
             foreach (object craft in crafts)
             {
                 if (craft == null) continue;
 
                 IList outputs = Get(craft, "output") as IList;
-                double blue = Reward(outputs, "b");
-                if (blue <= 0d) continue;
+                double red = Reward(outputs, "r");
+                if (red <= 0d) continue;
 
-                total++;
-                bluePerOnePass += blue;
+                craftSources++;
+                craftOnePassRed += red;
 
                 string craftType = Convert.ToString(Get(craft, "craft_type"), CultureInfo.InvariantCulture) ?? "";
                 bool isSurvey = string.Equals(craftType, "Survey", StringComparison.Ordinal);
@@ -111,13 +113,13 @@ namespace NikichMods.BGCRBalanceDump
                 object physical = FirstPhysicalOutput(outputs);
 
                 Logger.LogInfo(
-                    "BGCR_BLUE_SOURCE" +
+                    "BGCR_RED_CRAFT" +
                     "|id=" + Escape(craftId) +
                     "|craft_type=" + Escape(craftType) +
                     "|sub_type=" + Escape(Convert.ToString(Get(craft, "sub_type"), CultureInfo.InvariantCulture)) +
-                    "|blue=" + Format(blue) +
-                    "|red=" + Format(Reward(outputs, "r")) +
+                    "|red=" + Format(red) +
                     "|green=" + Format(Reward(outputs, "g")) +
+                    "|blue=" + Format(Reward(outputs, "b")) +
                     "|needs=" + Escape(ItemList(Get(craft, "needs") as IList)) +
                     "|outputs=" + Escape(ItemList(outputs)) +
                     "|physical_output=" + Escape(Id(physical)) +
@@ -131,19 +133,101 @@ namespace NikichMods.BGCRBalanceDump
                     "|is_auto=" + BoolString(Get(craft, "is_auto")) +
                     "|needs_unlock=" + BoolString(Get(craft, "needs_unlock")) +
                     "|can_craft_always=" + BoolString(Get(craft, "can_craft_always")) +
-                    "|disable_multi=" + BoolString(Get(craft, "disable_multi_craft")) +
                     "|techs=" + Escape(TechIdsForCraft(techs, craftId)) +
                     "|tech_meta=" + Escape(TechMetaForCraft(techs, craftId)));
             }
 
+            int workSources = 0;
+            double workOnePassRed = 0d;
+
+            foreach (object work in works)
+            {
+                if (work == null) continue;
+
+                object reward = Get(work, "reward");
+                double red = GameResGet(reward, "r");
+                if (red <= 0d) continue;
+
+                workSources++;
+                workOnePassRed += red;
+
+                Logger.LogInfo(
+                    "BGCR_RED_WORK" +
+                    "|id=" + Escape(Id(work)) +
+                    "|red=" + Format(red) +
+                    "|green=" + Format(GameResGet(reward, "g")) +
+                    "|blue=" + Format(GameResGet(reward, "b")));
+            }
+
+            int objectSources = 0;
+            int workLinkedObjects = 0;
+            int dropObjects = 0;
+            int addParamObjects = 0;
+
+            foreach (object obj in objects)
+            {
+                if (obj == null) continue;
+
+                string workId = Convert.ToString(Get(obj, "work"), CultureInfo.InvariantCulture) ?? "";
+                object linkedWork = FindById(works, workId);
+                object workReward = Get(linkedWork, "reward");
+
+                double workRed = GameResGet(workReward, "r");
+                IList dropItems = Get(obj, "drop_items") as IList;
+                double dropRed = Reward(dropItems, "r");
+                object addPlayer = Get(obj, "add_player_param_after_hp_0");
+                double addRed = GameResGet(addPlayer, "r");
+
+                if (workRed <= 0d && dropRed <= 0d && addRed <= 0d) continue;
+
+                objectSources++;
+                if (workRed > 0d) workLinkedObjects++;
+                if (dropRed > 0d) dropObjects++;
+                if (addRed > 0d) addParamObjects++;
+
+                Logger.LogInfo(
+                    "BGCR_RED_OBJECT" +
+                    "|id=" + Escape(Id(obj)) +
+                    "|type=" + Escape(Convert.ToString(Get(obj, "type"), CultureInfo.InvariantCulture)) +
+                    "|work=" + Escape(workId) +
+                    "|work_red=" + Format(workRed) +
+                    "|work_green=" + Format(GameResGet(workReward, "g")) +
+                    "|work_blue=" + Format(GameResGet(workReward, "b")) +
+                    "|drop_red=" + Format(dropRed) +
+                    "|drop_items=" + Escape(ItemList(dropItems)) +
+                    "|add_player_red=" + Format(addRed) +
+                    "|add_player_green=" + Format(GameResGet(addPlayer, "g")) +
+                    "|add_player_blue=" + Format(GameResGet(addPlayer, "b")) +
+                    "|hp_expr=" + Escape(ExpressionRaw(Get(obj, "hp"))) +
+                    "|player_cant_work=" + BoolString(Get(obj, "player_cant_work")) +
+                    "|need_unlock_work=" + BoolString(Get(obj, "need_unlock_work")));
+            }
+
             Logger.LogInfo(
-                "BGCR_BLUE_ECON_DONE" +
-                "|sources=" + total.ToString(CultureInfo.InvariantCulture) +
+                "BGCR_RED_ECON_DONE" +
+                "|craft_sources=" + craftSources.ToString(CultureInfo.InvariantCulture) +
                 "|surveys=" + surveys.ToString(CultureInfo.InvariantCulture) +
                 "|one_time=" + oneTime.ToString(CultureInfo.InvariantCulture) +
                 "|hidden=" + hidden.ToString(CultureInfo.InvariantCulture) +
                 "|ordinary_repeatable_visible=" + ordinaryRepeatableVisible.ToString(CultureInfo.InvariantCulture) +
-                "|one_pass_blue_sum=" + Format(bluePerOnePass));
+                "|craft_one_pass_red_sum=" + Format(craftOnePassRed) +
+                "|work_sources=" + workSources.ToString(CultureInfo.InvariantCulture) +
+                "|work_one_pass_red_sum=" + Format(workOnePassRed) +
+                "|object_sources=" + objectSources.ToString(CultureInfo.InvariantCulture) +
+                "|work_linked_objects=" + workLinkedObjects.ToString(CultureInfo.InvariantCulture) +
+                "|drop_objects=" + dropObjects.ToString(CultureInfo.InvariantCulture) +
+                "|add_param_objects=" + addParamObjects.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static object FindById(IList list, string id)
+        {
+            if (list == null || string.IsNullOrEmpty(id)) return null;
+            foreach (object item in list)
+            {
+                if (item != null && string.Equals(Id(item), id, StringComparison.Ordinal))
+                    return item;
+            }
+            return null;
         }
 
         private static object FirstPhysicalOutput(IList outputs)
