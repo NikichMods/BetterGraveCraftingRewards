@@ -154,3 +154,71 @@ Probe contract:
 - output machine-readable `BGCR_*` log lines for later analysis.
 
 Expected runtime action: install the diagnostic DLL, load any save until normal gameplay is active, then return `LogOutput.log`. No crafting or other gameplay action should be necessary.
+
+
+## Runtime grave-decoration dataset — 2026-09-27
+
+**Evidence status:** accepted runtime evidence, with explicit Better Save Soul field reconstruction described below.
+
+The read-only 0.1.0 dump completed successfully on Graveyard Keeper 1.407 and enumerated:
+
+- 42 grave-decoration items;
+- 132 producer paths;
+- 55 consumer paths;
+- 24 Survey/Study definitions.
+
+### Verified reward-shape findings
+
+The repeatable crafting reward curve is not monotonic with grave quality or material sophistication.
+
+Representative native craft outputs:
+
+- wooden decorations: 0 blue;
+- early stone decoration crafts: commonly 5 blue;
+- quality-5 stone sculptures: 10 blue;
+- the first marble fence/cross tiers: 0 blue despite being later and materially more advanced;
+- later marble plinth/sculpture recipes reach 15 blue;
+- additional late/DLC grave families contain a mixture of 0, 2, 5, 6, 10, and 15 blue rather than a consistent progression.
+
+This verifies the product problem independently of community reports: advancement can lead to an equal or lower repeatable blue reward even while grave quality, prerequisite technology and input sophistication increase.
+
+### Verified recycling structure
+
+The dump also verifies repeatable dismantling for the early wooden/stone family.
+
+Two especially important stone loops are already visible without needing lower-level material-chain assumptions:
+
+- `grave_bot_stn_1`: craft consumes `stone_plate_1 x2`, gives 5 blue; dismantling returns `stone_plate_1 x1`. Net repeat loss: one `stone_plate_1` for 5 blue.
+- `grave_bot_stn_2`: craft consumes `stone_plate_1 x1 + stone_plate_2 x1`, gives 5 blue; dismantling returns `stone_plate_2 x1`. Net repeat loss: one `stone_plate_1` for 5 blue.
+
+Thus progression from the first blue-producing stone fence to the later carved-stone fence does not improve blue yield per net basic stone input. At Stone Cutter II both can also use low-energy craft paths, so the early-loop incentive is not naturally displaced by a clearly superior advanced reward curve.
+
+Other recyclable stone decorations either consume more net material for the same 5 blue or move to 10 blue while consuming more advanced material. Exact cross-tier efficiency still requires the lower-level material production chain.
+
+### One-time Study interaction
+
+Study rewards rise strongly with material/tier even where repeatable craft rewards do not. The runtime data contains Study outputs from roughly 11 blue at the earliest wooden grave item through 81/91/101/121-blue late examples.
+
+Interpretation: vanilla already has a strong one-time exploration/progression reward, but that does not repair the repeatable-crafting incentive curve after the item has been studied.
+
+### Better Save Soul runtime contamination and reconstruction
+
+Better Save Soul Rebalance 1.1.1 was active in the evidence session.
+
+Before the BGCR dump it changed ten Better Save Soul grave recipes and related Soul technology prices. Inspection of its accepted source at `0772e4484fd3e9a91bdee386a802e05909cbce93` establishes:
+
+- grave `r/g/b` craft outputs are untouched, so the logged repeatable technology-point rewards remain vanilla;
+- mutated grave `needs` and Soul Gratitude costs must not be treated as vanilla directly;
+- mutated Soul technology prices must not be treated as vanilla directly;
+- the mod's guarded `Stock` / stock-price values are the vanilla baselines it requires before applying its changes, so those affected fields are reconstructable without another clean-game probe.
+
+### Remaining dataset gap
+
+The current evidence is sufficient to prove the reward progression defect and the native mutation seam, but not yet sufficient to compare all recipes on common resource/processing terms.
+
+Still needed:
+- producer recipes for the direct grave-crafting materials (stone/marble plate stages, iron details, gold jewelry detail, wood components, etc.);
+- their energy/time and prerequisite technologies;
+- enough backward material-chain data to calculate comparable processing depth and net repeat-loop cost.
+
+A second read-only material-chain dump is justified because direct inspection / existing NikichMods research does not currently contain those exact loaded 1.407 component recipes, and manual reconstruction would introduce avoidable transcription and arithmetic risk.
