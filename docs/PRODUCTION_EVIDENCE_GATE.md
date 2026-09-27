@@ -8,7 +8,7 @@ This record applies the DevRules per-change evidence gate before any production-
 
 ## Change A — static grave Study blue rebalance
 
-**Status: READY**
+**Status: ACCEPTED**
 
 ### Observable property
 
@@ -67,7 +67,7 @@ Candidate runtime must verify at least:
 
 ## Change B — finite red/blue manufacturing mastery
 
-**Status: READY**
+**Status: ACCEPTED**
 
 ### Observable property
 
@@ -245,3 +245,22 @@ Changes A and B are both **READY** and may share the first production candidate 
 - Change C remains excluded while BLOCKED.
 
 No further runtime research probe is required before the first production implementation of A+B.
+
+
+## Runtime acceptance closure
+
+Changes A and B are **runtime accepted** for production candidate 0.1.0.
+
+Accepted evidence covers:
+- Study reward mutation;
+- finite paired red/blue mastery;
+- queue behavior;
+- save persistence;
+- cross-save isolation;
+- zero-blue Marble activation;
+- shared workstation variants;
+- zero-reward endpoint;
+- worker exclusion;
+- Soul Gratitude routing.
+
+Change C (qualitative Study-value tooltip cue) remains **BLOCKED** as a separate UX behavior.
