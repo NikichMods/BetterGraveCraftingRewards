@@ -43,3 +43,15 @@ Important environment note:
 Research conclusion:
 - the 0.1.0 dump is authoritative for grave item identities, qualities, craft reward outputs, Study outputs, energy/time, recipe consumers/recycling, and unaffected prerequisite technologies;
 - for Better Save Soul recipes, use the stock baselines recorded by Better Save Soul Rebalance for material inputs / Soul Gratitude / modified technology-price fields.
+
+
+## BGCR Material Dump 0.2.0
+
+- Purpose: recursively enumerate native producer chains behind direct grave-decoration crafting materials.
+- Status: **source prepared; CI/runtime evidence pending**.
+- Research branch: `research/vanilla-balance-dump`.
+- Safety: read-only, no Harmony patches, no save mutation.
+- Evidence target:
+  1. no `BGCR_MATERIAL_ERROR`;
+  2. one complete dump ending in `BGCR_MATERIAL_DONE`;
+  3. producer chains sufficient to derive material processing depth, component-craft r/g/b generation, energy/time and terminal resources for grave-decoration inputs.
