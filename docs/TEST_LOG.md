@@ -184,7 +184,7 @@ Conclusion:
 ## BGCR Red Economy Dump 0.5.0
 
 - Purpose: inventory positive-red production/work/object reward paths needed to evaluate red grind and red progression.
-- Status: **CI-built; runtime evidence pending**.
+- Status: **runtime-complete; accepted with one known mod-added craft excluded from vanilla analysis**.
 - Research branch: `research/vanilla-balance-dump`.
 - Exact built source state: `9e7251b14a7640bf53af9046efc23c96915dc43d`.
 - CI run: `36351939021`.
@@ -201,3 +201,34 @@ Conclusion:
   4. positive-red work rewards and their linked objects are enumerated;
   5. object-level red drops/direct rewards are enumerated where present;
   6. returned data is sufficient to compare grave red grind against wider red recovery/progression sources.
+
+
+### Runtime result — BGCR Red Economy Dump 0.5.0
+
+User-returned log: `LogOutput(20260927-213311).log`.
+
+Observed:
+- Graveyard Keeper 1.407;
+- exact `BGCR Red Economy Dump 0.5.0` loaded;
+- no `BGCR_RED_ECON_ERROR`;
+- terminal marker:
+  `BGCR_RED_ECON_DONE|craft_sources=315|craft_surveys=69|craft_repeatable_visible=209|craft_one_pass_red_sum=3550|work_sources=2|work_one_pass_red_sum=3|object_sources=51|object_work_links=0|object_drop_sources=51|object_direct_param_sources=0`.
+
+Known environment correction:
+- `I Neeeed Sticks! 1.6.12` added `wooden_stick` to loaded `GameBalance` before the dump;
+- that added recipe contributes 1 red and is one visible repeatable craft;
+- excluding it gives 314 positive-red craft rows, 208 visible repeatable rows, and a 3549 raw one-pass craft-red checksum for the otherwise accepted loaded dataset.
+- Better Save Soul Rebalance changes grave inputs/Soul Gratitude and Soul tech prices but not the grave recipes' native r/g/b output rewards.
+- Queue Everything reported `converted=0 halved=0 fireAdjusted=0`; its forced-multicraft UI behavior does not change the logged reward values.
+
+WorkDefinition note:
+- only `shovel_1` (+1R/+1G) and `pickaxe_1` (+2R/+1G) have positive red `WorkDefinition.reward`;
+- no loaded `ObjectDefinition.work` points to those IDs, so they are not relied upon as proven active recovery sources.
+- Static `WorldGameObject.RewardForWork()` confirms a work reward is consumed only through an object's `obj_def.work` link.
+
+Independent gathering evidence is complete through object drops:
+- 51 object definitions contain red in `drop_items`;
+- 49 drop 1 red, and the iron/coal quarry nodes drop 2 red;
+- examples include trees/stumps, stone nodes, iron ore, coal/iron quarry nodes and breakable scenery.
+
+Probe acceptance target is satisfied for the project decision. No follow-up runtime probe is required.
