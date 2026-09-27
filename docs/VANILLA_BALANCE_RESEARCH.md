@@ -222,3 +222,48 @@ Still needed:
 - enough backward material-chain data to calculate comparable processing depth and net repeat-loop cost.
 
 A second read-only material-chain dump is justified because direct inspection / existing NikichMods research does not currently contain those exact loaded 1.407 component recipes, and manual reconstruction would introduce avoidable transcription and arithmetic risk.
+
+
+## Material-chain runtime findings — BGCR Material Dump 0.2.0
+
+**Evidence status:** accepted for resolved ordinary material recipes; multi-quality carved marble remains open.
+
+The 0.2.0 runtime dump found 16 direct grave-crafting inputs and walked 67 material nodes to depth 3.
+
+Important verified component rewards include:
+
+- `stone_plate_1`: 0 blue;
+- `stone_plate_2`: 1 blue per craft;
+- `stone_plate_3`: 0 blue;
+- `marble_plate_1`: 1 blue per craft, producing three pieces per batch;
+- `marble_plate_2`: 1 blue per craft;
+- `detail_3`: 1 blue per craft;
+- `jewelry_detail_gold`: 1 blue per craft;
+- ordinary iron/wood/basic resource processing is predominantly red/green rather than blue.
+
+This confirms that final grave-decoration reward comparison must account for blue points already generated during advanced component production. It also means a final-recipe-only comparison would overstate the relative disadvantage of some later decorations.
+
+### Multi-quality gap
+
+`marble_plate_3:1`, `:2`, and `:3` were falsely classified as terminal roots by 0.2.0.
+
+Static 1.407 inspection explains why: `Item.is_multiquality` is represented by a base output item whose `multiquality_items` list contains the concrete quality IDs, and `CraftDefinition.IsMultiqualityOutput()/GetMultiqualityResult()` resolves the produced quality. The 0.2.0 probe matched only exact `output Item.id`, so it could not associate the base multi-quality recipe with the three concrete carved-marble variants.
+
+This is a real evidence gap because carved marble is used by several high-tier grave decorations.
+
+### Recursion boundary
+
+The unrestricted producer walk is now rejected as the evidence method for further depth.
+
+Of 959 producer rows, 882 were generic `MixedCraft` alchemy combinations reached through side resources such as water/oil. These recipes are not needed to evaluate grave-decoration reward progression. Further recursion would add noise rather than decision-relevant evidence.
+
+### Final dataset boundary
+
+Before balance-model trade study, collect only the remaining decision-relevant facts:
+
+1. exact multi-quality carved-marble production recipe, inputs, energy/time, blue output, difficulty/perk/quality mechanism and unlock;
+2. prerequisite graph for technologies that unlock grave recipes and their material-production paths;
+3. station availability for the workstations those relevant crafts require;
+4. aggregate vanilla technology-tree blue cost as the denominator for pacing/inflation analysis.
+
+After these four fields are established, production-economy evidence is considered sufficient. Normal-play scenarios (representative counts of upgraded graves) are analysis cases derived from the verified table and do not require more runtime discovery.
