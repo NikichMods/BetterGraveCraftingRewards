@@ -128,7 +128,7 @@ Environment correction:
 ## BGCR Blue Economy Dump 0.4.0
 
 - Purpose: enumerate all positive-blue native `CraftDefinition.output` sources needed to verify recovery paths after finite grave-craft mastery.
-- Status: **CI-built; runtime evidence pending**.
+- Status: **runtime-complete; accepted**.
 - Research branch: `research/vanilla-balance-dump`.
 - Exact built source state: `c37f40e8aa19e6358e47c493d459a2bd39d279ec`.
 - CI run: `36340169556`.
@@ -144,3 +144,38 @@ Environment correction:
   3. all logged rows have positive native blue output;
   4. rows contain enough classification data to distinguish Survey/one-time, ordinary visible repeatable, hidden/scripted and automatic sources;
   5. non-grave repeatable fallback paths can be identified without community-value reconstruction.
+
+
+### Runtime result — BGCR Blue Economy Dump 0.4.0
+
+User-returned log: `LogOutput(20260927-201825).log`.
+
+Observed:
+- Graveyard Keeper 1.407;
+- exact `BGCR Blue Economy Dump 0.4.0` loaded;
+- no `BGCR_BLUE_ECON_ERROR`;
+- terminal marker:
+  `BGCR_BLUE_ECON_DONE|sources=355|surveys=194|one_time=194|hidden=2|ordinary_repeatable_visible=151|one_pass_blue_sum=3571`.
+
+Parsed source inventory:
+- Survey rows: 194, one-pass blue sum 2630;
+- grave-decoration Survey rows: 24, blue sum 1544;
+- non-grave Survey rows: 170, blue sum 1086;
+- non-Survey positive-blue rows: 161, raw one-pass blue sum 941;
+- non-grave non-Survey rows: 133, raw one-pass blue sum 670.
+
+The non-Survey sums are **not** a progression forecast because alternate-station duplicates and DLC rows coexist. They are inventory checks only.
+
+Base-game recovery evidence includes positive-blue repeatable recipes outside graves in multiple independent systems:
+- corpse handling/extraction;
+- glass/metal/material processing;
+- writing -> notes/chapter/books;
+- paper/printing;
+- candles/church crafts;
+- embalming fluid production;
+- prayer/sermon item production.
+
+Several no-`needs_unlock` non-grave rows also exist in the loaded balance, so grave finite mastery is not the sole recovery path.
+
+Conclusion:
+**Recovery-path evidence is sufficient. No further broad runtime probe is required before selecting the numeric balance model.**
