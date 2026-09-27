@@ -316,3 +316,36 @@ Phase 2 — after Phase 1 passes:
 - verify mastery exhaustion/worker exclusion with the cheapest deterministic setup available.
 
 Do not request broad all-recipe manual testing unless a concrete mismatch appears.
+
+
+## Cross-save projection check — PASS
+
+User-returned log: `LogOutput(20260927-230717).log`.
+
+Observed in one process:
+- first loaded save: `grave_bot_stn_1 completed=8`, both manufacturing variants projected **1R/1B**, physical output x1;
+- the user returned to the main menu and loaded a different save;
+- `OnGameStartedPlaying` ran again and production reprojected G2 for the newly loaded save;
+- second loaded save: `grave_bot_stn_1 completed=0`, both variants projected **5R/5B**, physical output x1.
+
+This is the required contrasting-value proof that the global `CraftDefinition.output` projection is refreshed from each save's own BGCR counter state and does not leak the previous save's mastery projection.
+
+**Cross-save isolation: PASS.**
+
+### Production mechanics acceptance
+
+All runtime acceptance items for Changes A+B are now satisfied:
+- player craft mastery sequence;
+- multicraft/queue per-item decay;
+- save persistence;
+- cross-save isolation;
+- formerly-zero-blue Marble projection;
+- representative Study mutations;
+- equivalent workstation variants sharing one design counter;
+- zero-reward endpoint preserving physical output;
+- ordinary worker exclusion;
+- Soul Gratitude routing.
+
+**Better Grave Crafting Rewards 0.1.0 G2 mechanics: RUNTIME ACCEPTED.**
+
+The research-only BGCR Test Console is no longer required for ordinary use and must not ship with production.
