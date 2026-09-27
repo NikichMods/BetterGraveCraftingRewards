@@ -294,3 +294,84 @@ It will:
 - emit only object-blueprint records whose `out_obj` matches workstations already observed in accepted 0.1/0.2 evidence.
 
 After that runtime evidence, no further broad balance-data probe is planned unless the returned data reveals a concrete missing owner/field.
+
+
+## Final scope-completion findings — BGCR 0.3.0
+
+**Status: accepted. Broad vanilla-data collection is complete for balance-model selection.**
+
+### Carved marble
+
+The native carved-marble producer is one multi-quality craft:
+
+- craft ID: `marble_plate_3`;
+- variants: `marble_plate_3:1`, `:2`, `:3`;
+- needs: `chisel:chisel_2 x1 + marble_plate_2 x1 + faith x5`;
+- outputs: one carved-marble result plus 3 red, 1 green, **2 blue**;
+- energy expression: 20;
+- time: 3;
+- difficulty: 1;
+- linked perks: mason, engineer, industriousness;
+- workstation: `mf_hammer_1`;
+- unlock: `The art of stone` (300 red / 50 green / 50 blue).
+
+This closes the multi-quality gap from 0.2.0 and confirms another embedded blue contribution in late grave-decoration production.
+
+### Relevant progression graph
+
+Core grave-decoration unlock chain:
+
+`Grave plate -> Simple gravestones -> Stone gravestones -> Carved gravestones -> Grave monuments -> Marble gravestones -> (Carved marble gravestones | Crypts)`
+
+Cumulative blue cost along that chain:
+
+- Stone gravestones: 15 blue including ancestors;
+- Carved gravestones: 45;
+- Grave monuments: 95;
+- Marble gravestones: 195;
+- Carved marble gravestones: 345;
+- Crypts: 345.
+
+Relevant stone/material progression:
+
+`The idea of the stone -> Stone processing -> Stone carving -> Marble Quarrying -> The art of stone`
+
+Cumulative blue cost:
+- Stone processing: 0;
+- Stone carving: 50;
+- Marble Quarrying: 100;
+- The art of stone: 150.
+
+Thus later grave recipes are gated by substantially more blue investment in both the grave branch and the material-production branch while their repeatable final-craft blue rewards remain irregular.
+
+### Aggregate blue denominator
+
+The runtime dump reported 4615 blue across 187 technology definitions, but Better Save Soul Rebalance 1.1.1 was active and had already increased four Soul technology prices by a total of 900 blue.
+
+Its accepted source records guarded vanilla baselines of 0 blue for:
+- `soul_stone_fences` (+150 in the mod);
+- `soul_marble_fences` (+200);
+- `soul_stone_statues` (+250);
+- `soul_marble_statues` (+300).
+
+Reconstructed vanilla all-DLC technology-tree blue cost:
+
+**3715 blue**.
+
+This is now the pacing denominator for candidate-model inflation analysis.
+
+### Evidence boundary conclusion
+
+The accepted 0.1.0, 0.2.0 and 0.3.0 evidence now covers the decision-relevant dataset:
+
+- grave-decoration identities and qualities;
+- final recipe materials, r/g/b rewards, energy/time and unlocks;
+- dismantling/recycling paths;
+- Study rewards;
+- ordinary and multi-quality component production;
+- embedded component-craft blue rewards;
+- technology parent graph and cumulative unlock cost;
+- relevant workstation availability;
+- aggregate vanilla blue technology cost.
+
+No additional broad runtime dump is justified before the balance-model trade study. Further runtime research should be opened only for a concrete unresolved mechanism discovered during implementation or acceptance.
