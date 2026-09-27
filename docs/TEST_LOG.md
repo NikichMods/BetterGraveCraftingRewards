@@ -179,3 +179,18 @@ Several no-`needs_unlock` non-grave rows also exist in the loaded balance, so gr
 
 Conclusion:
 **Recovery-path evidence is sufficient. No further broad runtime probe is required before selecting the numeric balance model.**
+
+
+## BGCR Red Economy Dump 0.5.0
+
+- Purpose: inventory positive-red production/work/object reward paths needed to evaluate red grind and red progression.
+- Status: **source prepared; CI/runtime evidence pending**.
+- Research branch: `research/vanilla-balance-dump`.
+- Safety: read-only, no Harmony patches, no game/save mutation.
+- Evidence target:
+  1. no `BGCR_RED_ECON_ERROR`;
+  2. one complete dump ending in `BGCR_RED_ECON_DONE`;
+  3. positive-red craft rows include grave and non-grave repeatable production;
+  4. positive-red work rewards and their linked objects are enumerated;
+  5. object-level red drops/direct rewards are enumerated where present;
+  6. returned data is sufficient to compare grave red grind against wider red recovery/progression sources.
