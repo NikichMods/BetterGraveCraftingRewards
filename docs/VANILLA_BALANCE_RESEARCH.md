@@ -375,3 +375,35 @@ The accepted 0.1.0, 0.2.0 and 0.3.0 evidence now covers the decision-relevant da
 - aggregate vanilla blue technology cost.
 
 No additional broad runtime dump is justified before the balance-model trade study. Further runtime research should be opened only for a concrete unresolved mechanism discovered during implementation or acceptance.
+
+
+## Research-method checkpoint — whole-game blue recovery paths
+
+### Question
+
+Before accepting finite grave-craft mastery, establish whether Graveyard Keeper 1.407 still provides sufficient **non-grave** one-time and repeatable blue sources for a player who spends blue poorly and has exhausted a grave recipe's finite mastery.
+
+### Existing path
+
+Accepted project evidence already proves:
+- all grave-decoration craft/Study blue rewards;
+- relevant component-craft blue rewards;
+- the complete technology-demand denominator.
+
+Shared research proves that blue points are ordinary `CraftDefinition.output` entries.
+
+What is still missing is the loaded 1.407 inventory of **all other positive-blue CraftDefinition outputs**. Community guides can identify examples, but are not authoritative enough to validate a whole-game recovery invariant.
+
+### Justification
+
+One final narrow read-only enumeration is justified.
+
+It will **not** rediscover grave/material progression. It will only emit `craft_data` rows whose native `output` contains positive blue points, with fields needed to classify:
+- Survey / one-time research;
+- ordinary repeatable craft;
+- hidden/scripted/automatic paths;
+- station, needs, output and technology owner/DLC gate.
+
+This is cheaper and less error-prone than reconstructing the full blue-source economy from wiki/community tables.
+
+The probe remains research-only, performs no patches and mutates no game/save state.
