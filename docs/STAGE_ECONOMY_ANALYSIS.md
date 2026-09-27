@@ -1,0 +1,242 @@
+# Base-Game Stage Economy Analysis
+
+Target: **Graveyard Keeper 1.407**
+
+Status: **quantitative design analysis; no candidate accepted**
+
+Scope: base game without DLC. This document uses the accepted 0.1.0 / 0.2.0 / 0.3.0 runtime evidence and deliberately separates:
+- direct grave-decoration craft rewards;
+- one-time Study rewards;
+- unchanged blue generated while manually producing required stone/marble components;
+- Faith spent on Study;
+- Faith consumed by advanced component/final recipes.
+
+## Base-game technology demand
+
+From the accepted 0.3.0 technology dump, excluding:
+- Better Save Soul branch 8;
+- technologies explicitly gated by Breaking Dead;
+- zero-cost Refugees/Game of Crone hidden rows;
+
+the base-game/no-DLC technology tree costs:
+
+- **5780 red**
+- **3117 green**
+- **3540 blue**
+
+This is the denominator for progression-scale checks.
+
+## Representative core grave progression
+
+The analysis uses one coherent representative path rather than pretending every player chooses the same cosmetic variant.
+
+| Stage | Representative newly-built recipe(s) | Final-craft blue per batch unit | Study blue | Study Faith | Manual component blue | Production Faith | Next relevant grave/material unlock |
+|---|---|---:|---:|---:|---:|---:|---|
+| Stone gravestones | `grave_bot_stn_1` + `grave_top_stn_plate_2` | 10 | 62 | 6 | 0 | 0 | Carved gravestones + Stone carving: 80 B / 250 R |
+| Carved stone | `grave_bot_stn_2` + `grave_top_stn_cross_2` | 10 | 62 | 6 | 4 per batch unit | 0 | Grave monuments: 50 B / 150 R |
+| Grave monuments | `grave_top_sculpt_stn_1` | 10 | 51 | 5 | 2 per item | 3 per item | Marble gravestones + Marble Quarrying: 150 B / 450 R |
+| Marble gravestones | `grave_bot_mrb_1` + `grave_top_mrb_cross_1` | 0 | 162 | 14 | `ceil(4N/3)+N` | 0 | Carved marble gravestones + The art of stone: 200 B / 600 R |
+| Carved marble | `grave_bot_mrb_2` + `grave_top_mrb_cross_2` | 0 | 182 | 16 | `ceil(4N/3)+5N` | 5 per batch unit | Crypts sibling unlock: 150 B / 300 R |
+| Crypts | `grave_top_sculpt_mrb_1` | 15 | 101 | 10 | `ceil(N/3)+3N` | 10 per item | end of core base grave branch |
+
+Notes:
+- `N` is the number of copies of each representative newly-built recipe in the stage.
+- Manual component blue assumes the ordinary manual material path from accepted 0.2/0.3 data. Zombie/alternate production can change this background contribution, so it is a sensitivity layer, not the invariant balance budget.
+- The selected stone headstone path avoids requiring Stone carving before that material technology is intentionally part of the next stage.
+- `grave_top_stella_mrb_1` is an explicit vanilla outlier at 15 final-craft blue inside Carved marble; it is not used as the representative path and must be normalized separately in a final table.
+- Study and production Faith are separate pressures. Higher tiers already consume substantial Faith during production itself, especially carved marble and marble sculptures.
+
+## Vanilla output at natural-batch scenarios
+
+### Direct grave craft + Study only
+
+| Copies N | Stone | Carved stone | Monuments | Marble | Carved marble | Crypts | Total |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 5 | 112 | 112 | 101 | 162 | 182 | 176 | **845** |
+| 10 | 162 | 162 | 151 | 162 | 182 | 251 | **1070** |
+| 15 | 212 | 212 | 201 | 162 | 182 | 326 | **1295** |
+| 20 | 262 | 262 | 251 | 162 | 182 | 401 | **1520** |
+
+### Including unchanged manual component blue
+
+| Copies N | Vanilla grave-path blue | Share of 3540 base-game blue demand |
+|---:|---:|---:|
+| 5 | **936** | 26.4% |
+| 10 | **1252** | 35.4% |
+| 15 | **1565** | 44.2% |
+| 20 | **1881** | 53.1% |
+
+Interpretation:
+- the user's concern is quantitatively correct: a 2–3 point reduction per repeat craft can remove tens or hundreds of blue during ordinary graveyard expansion;
+- grave progression is not a small side source. At natural batches around 10–20, it can represent a very large fraction of total base-game blue demand;
+- therefore anti-grind changes must be calibrated as stage budgets, not one-craft deltas;
+- component blue remains an unchanged fallback/background source and prevents the final-decoration reward from being the only repeatable knowledge path.
+
+## Faith pressure
+
+Study Faith is fixed per unique item, while advanced production Faith scales with copies.
+
+Representative totals:
+
+| Stage | Study Faith | Production Faith at N=5 | N=10 | N=15 | N=20 |
+|---|---:|---:|---:|---:|---:|
+| Stone | 6 | 0 | 0 | 0 | 0 |
+| Carved stone | 6 | 0 | 0 | 0 | 0 |
+| Monuments | 5 | 15 | 30 | 45 | 60 |
+| Marble | 14 | 0 | 0 | 0 | 0 |
+| Carved marble | 16 | 25 | 50 | 75 | 100 |
+| Crypts | 10 | 50 | 100 | 150 | 200 |
+
+This is important for late-tier grind risk: sophisticated marble crafting is already heavily constrained by Faith even before any Study redistribution.
+
+## Diminishing-mastery stress-test ladder
+
+The following start values are **test parameters, not accepted balance values**:
+
+- Stone: 5 blue;
+- Carved stone: 6;
+- Monuments: 7;
+- Marble: 8;
+- Carved marble: 9;
+- Crypts: 10.
+
+For stages with a fence + marker, each recipe uses the stage start value.
+
+Three shape families are compared:
+
+### F1 — linear
+
+`S, S-1, S-2 ... 1, 0`
+
+Strongest anti-grind / shortest mastery window.
+
+### F2 — three-copy plateau
+
+`S, S, S, S-1, S-2 ... 1, 0`
+
+Preserves several full-value practical crafts before mastery begins to decay.
+
+### F3 — paired steps
+
+`S, S, S-1, S-1, S-2, S-2 ... 1, 1, 0`
+
+Longest finite mastery window of the three.
+
+For comparison, each model shifts enough of the **currently blue-paying** stage's missing 10-copy craft budget into that stage's Study pool to preserve its vanilla N=10 budget. Existing zero-blue Marble / Carved-marble Study is never reduced just to fund a new craft reward.
+
+Required Study-pool shift on the representative path:
+
+| Stage | F1 linear | F2 plateau | F3 paired |
+|---|---:|---:|---:|
+| Stone | +70 | +50 | +40 |
+| Carved stone | +58 | +34 | +20 |
+| Monuments | +72 | +58 | +50 |
+| Marble | +0 | +0 | +0 |
+| Carved marble | +0 | +0 | +0 |
+| Crypts | +95 | +78 | +70 |
+| **Total** | **+295** | **+220** | **+180** |
+
+These are stage pools, not final per-item Study values. A final allocation must preserve a coherent monotonic Study hierarchy rather than blindly split each pool in half.
+
+## Candidate totals — direct grave craft + Study
+
+| N | Vanilla | F1 linear | F2 plateau | F3 paired |
+|---:|---:|---:|---:|---:|
+| 5 | 845 | 1180 | 1175 | 1125 |
+| 10 | 1070 | 1232 | 1298 | 1330 |
+| 15 | 1295 | 1232 | 1303 | 1415 |
+| 20 | 1520 | 1232 | 1303 | 1434 |
+
+The apparent N=10 inflation is caused by deliberately repairing the vanilla zero-blue Marble and Carved-marble tiers while also conserving the earlier blue-paying stage budgets.
+
+### With unchanged manual component blue
+
+| N | Vanilla | F1 linear | F2 plateau | F3 paired |
+|---:|---:|---:|---:|---:|
+| 5 | 936 | 1271 | 1266 | 1216 |
+| 10 | 1252 | 1414 | 1480 | 1512 |
+| 15 | 1565 | 1502 | 1573 | 1685 |
+| 20 | 1881 | 1593 | 1664 | 1795 |
+
+Because component blue is unchanged in every model, the candidate-vs-vanilla delta is identical to the direct table.
+
+## What the matrix says
+
+### F1
+
+Pros:
+- strongest removal of long-run grave grind;
+- moves the largest share into intentional Study;
+- simple and easy to explain.
+
+Cons:
+- very front-loaded;
+- mastery expires after a small number of items;
+- likely too aggressive if 10–15 copies are genuinely normal rather than exceptional.
+
+### F2
+
+Pros:
+- gives a short full-value practical batch before decay;
+- near vanilla around N=15 on the representative full progression;
+- still materially caps N=20+ grind.
+
+Cons:
+- requires a large Study shift;
+- the three-copy plateau is mechanically arbitrary unless player-use evidence supports it.
+
+### F3
+
+Pros:
+- best preserves useful repeat crafting through roughly the 10–15 range;
+- still produces a finite lifetime reward;
+- moves a meaningful amount into Study while avoiding the sharpest cliff;
+- at N=20 remains below vanilla despite repairing late zero-blue tiers.
+
+Cons:
+- longest remaining grind tail;
+- more total blue is retained in craft than the user's Study-heavy intuition may ultimately prefer;
+- exact late-tier start values need downward tuning to avoid excessive Marble-stage inflation.
+
+**Current quantitative leader: F3's long finite-mastery shape, but with lower/tuned start values for the currently zero-blue Marble tiers and a separately smoothed Study allocation.**
+
+This is not yet an accepted balance model.
+
+## Red-point audit
+
+For the representative final grave recipes, direct red income per batch unit is:
+
+- Stone: 7 red;
+- Carved stone: 7;
+- Monuments: 5;
+- Marble: 10;
+- Carved marble: 10;
+- Crypts: 5.
+
+Thus base-game final grave crafts do **not** provide a clean red progression either; most individual advanced recipes are still flat at 5 red.
+
+However red differs semantically and economically from blue:
+- red is broadly generated by component/manual work;
+- base-game technology demand is 5780 red, higher than 3540 blue;
+- practical repeated work remains a coherent source of red.
+
+Therefore red should receive a separate smoothing pass, not the finite-to-zero mastery rule. Exact red values remain open.
+
+## Remaining whole-game supply question
+
+The current accepted evidence proves:
+- total base-game technology demand;
+- grave Study/craft income;
+- relevant component income.
+
+It does **not** yet enumerate every non-grave repeatable and one-time blue source in loaded 1.407.
+
+That missing table is now decision-relevant because finite grave mastery must preserve recovery after a bad technology purchase.
+
+Before accepting any numeric curve, obtain one narrow read-only inventory of all positive-blue `CraftDefinition.output` sources, classified by:
+- Survey/one-time vs repeatable;
+- craft type/station;
+- needs/output;
+- technology unlock where present.
+
+No production change is justified until this recovery-path evidence is closed.
