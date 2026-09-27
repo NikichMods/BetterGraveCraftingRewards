@@ -510,3 +510,96 @@ This evidence will be used to decide whether red should:
 - remain fully repeatable;
 - use a softer diminishing-mastery curve with a nonzero floor;
 - or receive another progression rule.
+
+
+## Whole-game red economy findings — accepted 0.5.0
+
+### Loaded source inventory
+
+After excluding the one known mod-added `wooden_stick` recipe, the accepted loaded-data inventory contains:
+
+- 314 positive-red craft rows;
+- 69 positive-red Survey rows;
+- 208 visible non-Survey/non-auto repeatable craft rows;
+- 51 object definitions with red tech-point drops.
+
+The raw positive-red Survey pool is **2810 red** in the loaded dataset.
+
+Study is therefore already a major vanilla-native red acquisition mechanism, not a blue-only concept. Representative base-game Survey rewards include:
+- 50 red for several advanced materials/tools at about 5 Faith;
+- 100 red for advanced tools/components at 5–10 Faith;
+- 150 red for top practical items such as carved wood, carved marble, damask sword and advanced armor at 10 Faith.
+
+This means adding red to grave-decoration Study would be host-consistent if stage-budget analysis later justifies it. It is not required merely to make the mechanism feel vanilla.
+
+### Wider repeatable red economy
+
+Red is broadly generated outside grave decoration:
+
+- basic/advanced metalworking;
+- wood processing;
+- stone/marble processing;
+- tool production;
+- glass/ceramics;
+- mining/gathering object drops;
+- quarry resource handling.
+
+Representative manual recipes:
+- `wood1_2`: 3 red;
+- `stone_plate_1`: 3 red;
+- `stone_plate_2`: 3 red;
+- `detail_2`: 3 red;
+- iron tools: 5 red;
+- `carved_wood`: 10 red, with Faith/material gating.
+
+Object drops independently give red for ordinary physical gathering. Trees/stumps and stone nodes commonly drop 1 red; loaded iron/coal quarry nodes drop 2.
+
+Therefore grave decorations are not required to remain an infinite red source for recovery.
+
+### Grave-specific red findings
+
+The core base-game final grave-craft curve is strongly flattened:
+
+- early wooden recipes: roughly 2–5 red;
+- first stone fence: 2 red;
+- most stone headstones/monuments: 5 red;
+- first marble fence/cross: 5 red;
+- carved marble fence/cross/sculptures: still commonly 5 red.
+
+Later DLC grave families finally rise to 7/9/10/15/17 red, proving that larger grave-craft red values are already within the host's vocabulary.
+
+The classic early stone-fence recycling loop is multi-currency:
+
+- craft `grave_bot_stn_1`: +2 red +5 blue;
+- dismantle: recover one of two basic stone blocks;
+- manually replace the lost `stone_plate_1`: +3 red.
+
+Thus the repeat cycle produces roughly **5 red + 5 blue per lost basic stone block**, before raw stone acquisition rewards.
+
+### Installation reward
+
+Every loaded `set_grave_*` installation craft emits **+1 red**.
+
+The accepted earlier dataset also proves the corresponding `rem_grave_*` operation returns the decoration with no point reward.
+
+Therefore intended graveyard use has a separate repeatable practical-work reward even if manufacturing mastery later reaches zero.
+
+A technically infinite install/remove loop exists:
+- set decoration: +1 red, 5 energy;
+- remove decoration: +0 red, 5 energy, item returned.
+
+At ~1 red per 10 energy before interaction overhead, it is substantially weaker than ordinary productive red sources such as stone/wood processing and is not currently a dominant grind candidate. Keep it unchanged unless acceptance testing demonstrates otherwise.
+
+### Design implication
+
+The earlier assumption that red grave-craft output should stay fully repeatable is rejected.
+
+Red can use finite mastery as well.
+
+Because:
+- normal component production continues to generate red;
+- actual grave installation continues to generate +1 red;
+- ordinary gathering/metal/wood/stone work provides repeatable red;
+- Study already provides large one-time red rewards elsewhere;
+
+there is no systemic need for grave-decoration manufacturing itself to retain an infinite red tail.
