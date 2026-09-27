@@ -232,3 +232,49 @@ Independent gathering evidence is complete through object drops:
 - examples include trees/stumps, stone nodes, iron ore, coal/iron quarry nodes and breakable scenery.
 
 Probe acceptance target is satisfied for the project decision. No follow-up runtime probe is required.
+
+
+## Production candidate 0.1.0 — G2 mechanics
+
+- Status: **CI-built; runtime acceptance pending**.
+- Branch: `dev/0.1.0`.
+- Exact built source: `1eb7145f1c160ac95486771c336198f397255060`.
+- CI run: `36355076332`.
+- Artifact ID: `10943586956`.
+- GitHub artifact: `BetterGraveCraftingRewards-0.1.0-1eb7145f1c160ac95486771c336198f397255060`.
+- Handoff DLL: `BetterGraveCraftingRewards-0.1.0.dll`.
+- Installed assembly identity: `BetterGraveCraftingRewards.dll`.
+- DLL SHA-256: `84a74e4d890b6922ce0a8d2363bf74227019ff63144d7f6e3fb3a72f2913c9aa`.
+- Artifact ZIP digest: `sha256:a22628af690118eac75e99b315760cd4021902f0e6e5dc095383f2282f6e9f70`.
+- Build result: success.
+
+### Included behavior
+
+- accepted G2 table for 41 active grave-decoration designs;
+- Study-blue changes for 23 existing Survey recipes;
+- paired per-design red/blue manufacturing mastery;
+- save-native mastery counters;
+- equivalent manufacturing variants share one design counter;
+- baseline guards against conflicting R/B reward mods;
+- zero-reward endpoint uses stable native r/b output entries;
+- Marble sarcophagus excluded;
+- qualitative Study-value tooltip cue **not included**.
+
+### Runtime acceptance plan
+
+Phase 1 — one early design, minimal proof:
+1. install only this candidate in place of BGCR research probes;
+2. load a save where `grave_bot_stn_1` can be crafted;
+3. craft four copies as the player;
+4. expected manufacturing sequence: `5R/5B, 5R/5B, 4R/4B, 4R/4B`;
+5. save/reload;
+6. next copy should continue at `3R/3B`, not reset to 5/5;
+7. return `LogOutput.log`.
+
+Phase 2 — after Phase 1 passes:
+- verify one formerly zero-blue Marble recipe starts at its G2 value;
+- verify one Study reward;
+- verify an alternate workstation variant shares mastery where convenient;
+- verify mastery exhaustion/worker exclusion with the cheapest deterministic setup available.
+
+Do not request broad all-recipe manual testing unless a concrete mismatch appears.
