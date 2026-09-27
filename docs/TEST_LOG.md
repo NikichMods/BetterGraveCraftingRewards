@@ -395,3 +395,26 @@ This closes:
 
 Remaining acceptance item:
 - cross-save projection/isolation, using the already-built read-only `Snapshot current save` action. No new build is required.
+
+
+## Cross-save projection check — partial evidence
+
+User-returned log: `LogOutput(20260927-230001).log`.
+
+Observed sequence:
+- clean process start;
+- production 0.1.0 and test console 0.1.0 loaded;
+- first save loaded and production reprojected G2;
+- snapshot #1: `grave_bot_stn_1 completed=0`, both manufacturing variants = 5R/5B;
+- returned to main menu;
+- a second, distinct save was loaded in the same process;
+- production `OnGameStartedPlaying` ran again and reprojected G2;
+- snapshot #2 (and repeated snapshot #3): `completed=0`, both variants = 5R/5B.
+
+This proves the cross-save lifecycle hook runs on both save loads and that the second save receives a fresh projection.
+
+However, both selected saves had the same BGCR counter value (0), so this run does **not** yet provide a contrasting-value proof that a nonzero projected reward from save A cannot leak into save B.
+
+**Cross-save isolation status: PARTIAL PASS.**
+
+No production defect is indicated. One final contrast check is needed using a save whose `grave_bot_stn_1` counter is known to be nonzero (the Phase-1 save had completed=4) followed by a zero-counter save, or an equivalent harness-assisted contrast.
