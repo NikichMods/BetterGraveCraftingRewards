@@ -480,3 +480,136 @@ Recommended structure before exact values:
 9. leave component-craft blue and non-grave blue sources untouched.
 
 C1 remains useful as a comparison candidate but is no longer the preferred conceptual model.
+
+
+## Model F — Finite mastery / diminishing repeat rewards
+
+### Motivation
+
+The previous Study-compensation model was too narrow when it conserved only the first craft + Study package.
+
+Normal graveyard play does not stop after one crafted fence/headstone. A player can reasonably craft a batch of the current tier for existing graves, so reducing each repeat craft by several blue points can remove tens of blue points from ordinary progression even if the first-copy package is conserved.
+
+Therefore the relevant unit is a **stage batch**, not a first-copy pair.
+
+### Candidate rule
+
+For a recipe with starting repeat reward S:
+
+`reward(k) = max(S - (k - 1), 0)`
+
+where k is the player's successful craft count for that recipe in the current save.
+
+The total lifetime reward from that recipe is therefore triangular:
+
+`S(S+1)/2`
+
+Examples:
+- S=5 -> 5+4+3+2+1 = 15;
+- S=6 -> 21;
+- S=7 -> 28;
+- S=8 -> 36;
+- S=10 -> 55.
+
+A later tier can start at a higher S, simultaneously making the first crafts feel more rewarding and allowing more rewarded copies before the recipe reaches zero.
+
+### Key balance consequence
+
+If vanilla gives 5 blue on every craft and a normal player makes 10 copies, vanilla produces 50 blue from that recipe.
+
+A simple S=5 diminishing curve produces only 15 blue over those same 10 copies.
+
+The missing 35 blue cannot be assessed correctly by compensating only the first craft. It must be evaluated against the expected stage batch.
+
+This validates the user's concern that a 2–3 point per-craft nerf can become a 20–60 point progression nerf in ordinary graveyard development.
+
+### Study compensation: do not front-load the whole batch blindly
+
+Moving the entire expected stage shortfall into Study creates a new pacing distortion:
+
+- vanilla grants the 30–100 points gradually while the player actually upgrades many graves;
+- Study would grant the whole compensation immediately after the first item is crafted and researched;
+- that can unlock the next technology tier before the player has any reason to use the current tier on the graveyard.
+
+Therefore Study should absorb **part**, not automatically all, of the removed batch reward.
+
+The rest should remain distributed across the first several useful crafts through the finite mastery curve.
+
+### Better target structure
+
+Use three components:
+
+1. **Study discovery grant** — larger than vanilla where necessary, but still a one-time discovery reward.
+2. **Finite craft-mastery pool** — first several player-made copies yield diminishing blue.
+3. **Zero long-run grind yield** — once mastery is exhausted, additional copies are made only because the graveyard needs them.
+
+This directly aligns technology income with:
+- discovering the design;
+- learning it through a practical batch;
+- then building additional copies for graveyard utility rather than tech farming.
+
+### Reference-batch analysis
+
+Do not pick one supposed average grave count.
+
+For each tier, evaluate at least N = 5, 10, 15 and 20 copies per recipe, plus Bishop milestone scenarios (graveyard 30 / 100 / 200).
+
+Choose parameters that remain acceptable across that range.
+
+The Bishop progression is useful as an external anchor because graveyard quality requirements rise from 30 to 100/200 while better bodies and decorations become available. It does not imply one exact number of graves.
+
+### Base-game corpse / grave ceiling
+
+External cross-check for the no-DLC/base-game balance context:
+
+- a corpse can reach **16 white skulls** in the base game using three +3-white important organs, embalming, and blood/fat removal;
+- however base-game grave decoration is capped at **+12** (up to +7 headstone + +5 fence), so white skulls above 12 do not improve a normal grave's rating without later DLC decoration families.
+
+This matters for the late base-game reference scenario: normal grave-decoration demand effectively tops out at 12 quality per grave even though corpse preparation can exceed it.
+
+### Technical feasibility
+
+A diminishing reward requires per-save per-recipe craft counts, so it is more complex than the current static-data model.
+
+However:
+- Graveyard Keeper's native `GameSave.OnFinishedCraft` records only whether a craft has ever been completed, not a repeat count;
+- PrayerClarity has already verified and accepted native per-save player parameters via `WorldGameObject.SetParam/GetParam`; these are serialized through the player's normal save data;
+- `CraftComponent.ProcessFinishedCraft` is the final successful craft/output path.
+
+Promising host-native-first implementation shape:
+
+1. store only the successful player craft count in native player params;
+2. on save load, project the current next reward into the existing `CraftDefinition.output` tech-point entry;
+3. after a successful relevant player craft, increment the counter and project the next reward;
+4. let the normal `ProcessFinishedCraft` output path award the currently projected reward;
+5. keep worker/zombie crafts excluded where the host already excludes tech-point drops;
+6. leave stale counters harmless if the mod is removed.
+
+This should also allow the craft UI to continue reading the current native recipe output rather than inventing a parallel reward display, subject to explicit UI verification before implementation.
+
+### Color scope
+
+Prefer applying diminishing mastery primarily to **blue** points.
+
+Rationale:
+- blue represents the knowledge/progression problem this project is solving;
+- red can reasonably remain repeatable hands-on work experience;
+- reducing both red and blue would broaden the economy change without evidence it is necessary.
+
+This is a design preference, not yet accepted behavior.
+
+### Current design direction
+
+Model F is now the strongest conceptual candidate.
+
+It improves on Model E because it does not force all displaced normal-play income into an immediate Study payout.
+
+Next design work should quantify several finite mastery curves against:
+- 5 / 10 / 15 / 20 natural copies;
+- Bishop graveyard milestones;
+- total base-game and all-DLC blue demand;
+- Study/Faith timing;
+- whether higher starting rewards at later tiers create premature tech acceleration;
+- old-save migration behavior.
+
+No production source should be changed yet.
