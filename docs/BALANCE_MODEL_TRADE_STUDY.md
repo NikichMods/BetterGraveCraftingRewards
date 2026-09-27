@@ -828,3 +828,20 @@ This creates a cleaner rule for the player:
 The same per-recipe successful-craft counter can drive both red and blue reward projection, avoiding two independent state systems.
 
 The exact red start ladder, especially wooden recipes and DLC families, remains a product-number decision.
+
+
+## Unified numeric candidate G2
+
+The next complete numeric candidate is maintained in:
+- `docs/UNIFIED_BALANCE_CANDIDATE.md`.
+
+G2 supersedes the earlier C1 table as the current product-review candidate.
+
+Key differences:
+- finite paired mastery applies to **red and blue** grave-manufacturing rewards;
+- mastery identity is the produced grave-decoration design, shared across equivalent station recipes;
+- base-game technology progression establishes the main rank;
+- obvious plinth/memorial/sculpture complexity adds only a small premium;
+- existing Study blue is smoothed upward without changing Faith/Science cost or creating new Survey recipes;
+- the unused Marble sarcophagus row remains excluded;
+- production remains BLOCKED pending product acceptance and the implementation evidence gate.
