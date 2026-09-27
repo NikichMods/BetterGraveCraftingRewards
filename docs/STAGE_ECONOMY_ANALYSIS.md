@@ -240,3 +240,114 @@ Before accepting any numeric curve, obtain one narrow read-only inventory of all
 - technology unlock where present.
 
 No production change is justified until this recovery-path evidence is closed.
+
+
+## Recovery-path evidence update — accepted 0.4.0
+
+The whole-game blue inventory is now accepted.
+
+Key result:
+- finite grave mastery does **not** remove the wider repeatable blue economy;
+- base-game repeatable positive-blue recipes exist in writing/books, anatomy, glass/material production, candles, embalming, sermons/prayers and other systems;
+- therefore grave recipes do not need an infinite tail merely to serve as an emergency recovery exploit.
+
+This materially strengthens the case for a true zero-after-mastery endpoint.
+
+## Strict monotonic start ladder
+
+Per the design correction, local vanilla zeroes are not anchors.
+
+For quantitative comparison, retain the paired-step F3 shape and test the strictly increasing start ladder:
+
+`5 -> 6 -> 7 -> 8 -> 9 -> 10`
+
+for:
+1. Stone;
+2. Carved stone;
+3. Grave monuments;
+4. Marble;
+5. Carved marble;
+6. Crypts.
+
+Per-recipe lifetime blue mastery pool under paired steps is:
+
+`S(S+1)`
+
+because each positive reward value is paid twice.
+
+Thus:
+- start 5 -> 30 lifetime blue per recipe;
+- 6 -> 42;
+- 7 -> 56;
+- 8 -> 72;
+- 9 -> 90;
+- 10 -> 110.
+
+For the representative stage path with two recipes in Stone/Carved/Marble/Carved-marble and one in Monuments/Crypts, total finite craft mastery across the entire core progression is **634 blue**.
+
+That total cannot grow further no matter how many decorations are mass-produced.
+
+## Study-redistribution variants with strict mastery
+
+Representative vanilla Study pools across the six core stages total **620 blue**.
+
+Three coherent Study ladders are compared. Values shown are per representative item in each stage; two-item stages therefore contribute twice.
+
+### S1 — restrained
+
+`40 -> 45 -> 60 -> 85 -> 95 -> 105`
+
+Representative Study total: **695** (+75 versus vanilla representative Study).
+
+### S2 — balanced
+
+`40 -> 50 -> 70 -> 90 -> 100 -> 110`
+
+Representative Study total: **740** (+120).
+
+### S3 — Study-heavy
+
+`45 -> 55 -> 80 -> 100 -> 110 -> 120`
+
+Representative Study total: **820** (+200).
+
+These are design test ladders, not accepted exact Survey outputs.
+
+## Combined result — strict F3 mastery + Study ladder
+
+Direct grave-craft + Study only:
+
+| Copies N | Vanilla | S1 restrained | S2 balanced | S3 Study-heavy |
+|---:|---:|---:|---:|---:|
+| 5 | 845 | 1020 | 1065 | 1145 |
+| 10 | 1070 | 1225 | 1270 | 1350 |
+| 15 | 1295 | 1310 | 1355 | 1435 |
+| 20 | 1520 | 1329 | 1374 | 1454 |
+| 30 | 1970 | 1329 | 1374 | 1454 |
+
+Unchanged component blue adds equally to vanilla/candidates for the same production path and therefore does not change the delta.
+
+### Interpretation
+
+All three variants fully repair the zero-blue Marble discontinuity while retaining a strictly increasing mastery start value.
+
+Even **S3 Study-heavy**:
+- is more generous than vanilla through ordinary 5–15-copy development;
+- is already below vanilla by 20 copies;
+- reaches a hard lifetime ceiling after mastery instead of scaling forever.
+
+This is a strong result for the product goal.
+
+The system can therefore afford to move a meaningful amount of blue into Study **without** preserving the infinite craft tail.
+
+### Current qualitative preference
+
+S1 is probably too restrained relative to the desired Study-centric identity.
+
+S2 and S3 are both viable for user/product review:
+- **S2** minimizes pacing acceleration while making the intended system legible;
+- **S3** more decisively makes Study the primary knowledge event and relies on Faith/Science/logistics as its natural gate.
+
+Because Study is optional, costs Faith/Science, requires the item to be carried to the table, and is now planned to receive a qualitative value cue, S3's apparent front-loading is less automatic than the raw totals suggest.
+
+No exact Study ladder is accepted yet.
