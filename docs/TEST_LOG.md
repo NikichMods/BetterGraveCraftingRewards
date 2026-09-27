@@ -81,3 +81,17 @@ Probe result is accepted for the material recipes it resolved. It also exposed t
 2. 882 of 959 producer rows were generic `MixedCraft` alchemy combinations reached through water/oil/faith-adjacent dependencies. They are valid host recipes but irrelevant to grave-decoration balance and demonstrate that unrestricted recursive producer traversal is too broad.
 
 Accepted 0.2.0 conclusions therefore remain limited to the resolved ordinary production paths; the next probe must target the missing multi-quality producer plus progression/economy metadata directly rather than recurse further.
+
+
+## BGCR Scope Completion Dump 0.3.0
+
+- Purpose: close the final carved-marble, progression-graph, workstation-availability and aggregate tech-cost gaps.
+- Status: **source prepared; CI/runtime evidence pending**.
+- Research branch: `research/vanilla-balance-dump`.
+- Safety: read-only, no Harmony patches, no game/save mutation.
+- Evidence target:
+  1. no `BGCR_SCOPE_ERROR`;
+  2. one complete dump ending in `BGCR_SCOPE_DONE`;
+  3. at least one `BGCR_MQ_CRAFT` covering `marble_plate_3:1/:2/:3`;
+  4. complete `BGCR_TECH` parent/price rows and `BGCR_TECH_TOTALS`;
+  5. relevant `BGCR_BLUEPRINT` rows sufficient to map the observed crafting stations to their unlock path.
