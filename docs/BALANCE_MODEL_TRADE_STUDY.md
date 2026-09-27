@@ -613,3 +613,127 @@ Next design work should quantify several finite mastery curves against:
 - old-save migration behavior.
 
 No production source should be changed yet.
+
+
+## Integrated system direction — progression, discoverability, and grind control
+
+The balance problem is no longer treated as a single grave-recipe table.
+
+The coherent player-facing system has four layers:
+
+### 1. Study discoverability
+
+Vanilla already shows an unstudied item's research point **colors** in the ordinary item tooltip but hides numeric output.
+
+Preserve that principle and add a qualitative magnitude cue derived from the native Survey output.
+
+Desired UX:
+- the player can tell before walking to the Study Table that an item is a low / medium / high-value research target;
+- exact numeric reward remains undisclosed;
+- completion state remains vanilla-owned;
+- the cue applies consistently to studyable items rather than being hard-coded only for graves.
+
+Candidate visual language to compare later:
+- one / two / three intensity pips next to each point-color icon;
+- icon + qualitative localized word;
+- icon + small tier marker.
+
+Avoid exact numeric Study rewards in inventory tooltips.
+
+### 2. Discovery reward
+
+Study remains the principal one-time knowledge event.
+
+Because using Study requires:
+- carrying/remembering the item;
+- access to the church basement;
+- Science;
+- Faith;
+- choosing to spend that Faith instead of elsewhere;
+
+a larger Study reward is not equivalent to an automatic early technology grant.
+
+This supports moving a material share of the stage's blue budget into Survey output, provided stage pacing is checked rather than conserving only the first-copy package.
+
+### 3. Finite craft mastery
+
+Repeated grave-decoration crafting should grant knowledge only for a finite useful batch.
+
+Target behavior:
+- first copies of a newly unlocked tier feel rewarding;
+- later tiers start with a larger reward and/or a longer mastery window;
+- reward decays as the player repeats the exact recipe;
+- after mastery, additional copies give no blue and are crafted because the graveyard needs them.
+
+This removes the permanent incentive to craft/dismantle one optimal recipe while preserving blue income during normal graveyard expansion.
+
+The correct calibration unit is the expected **stage batch**. Evaluate at 5 / 10 / 15 / 20 copies rather than conserving one craft.
+
+### 4. Red progression
+
+Do not automatically apply the same blue mastery algorithm to red.
+
+Accepted runtime evidence already shows a substantially healthier red progression across grave crafts: early wood/stone recipes generally pay only a few red points while advanced monuments/statues commonly reach 10–15 red.
+
+Design direction:
+- preserve red as repeatable hands-on work experience;
+- smooth obvious same-tier anomalies if needed;
+- ensure later decoration generally pays more red than primitive decoration;
+- test red grind efficiency, but do not force red to zero after mastery without evidence.
+
+### Base-game technology denominator
+
+Using the accepted 1.407 runtime tech dump:
+
+- all loaded tech totals with the active mod environment were 6585 red / 4147 green / 4615 blue;
+- Better Save Soul Rebalance accounts for +900 blue versus stock in branch 8;
+- excluding Better Save Soul's branch-8 technology costs and Breaking Dead's explicitly DLC-gated technology costs gives the base-game/no-DLC denominator used for this project analysis:
+
+**5780 red / 3117 green / 3540 blue.**
+
+Game of Crone / Stranger Sins hidden technology rows in the loaded dataset carry zero point price and therefore do not change these totals.
+
+These figures supersede older community estimates from earlier game versions.
+
+### Error-recovery requirement
+
+The player must retain ways to recover from buying an unhelpful technology.
+
+The mod therefore must not make all blue acquisition finite.
+
+The grave-decoration subsystem can become finite-mastery because vanilla still provides other repeatable/fallback paths (writing/crafting/books and other blue-producing recipes), while Study provides the principal discovery income.
+
+Acceptance should nevertheless include a deliberate "bad tech purchase" scenario:
+- spend a realistic block of blue on the wrong branch;
+- assume the player has exhausted the current grave recipe's mastery;
+- verify that the game remains recoverable without requiring a wiki-defined exploit.
+
+### Late-game surplus boundary
+
+Late-game surplus technology points are real community friction, but adding new sinks or repeatable post-tree spending remains outside this project's product scope.
+
+This mod should address the upstream cause it controls:
+- no infinite grave-decoration knowledge farm;
+- late sophisticated crafts may have a strong **initial** reward;
+- their total lifetime mastery reward is finite;
+- Study bonuses should not be inflated merely to make large late-game numbers.
+
+If surplus remains after the technology tree is complete, that is a separate economy/sink project rather than a reason to damage early/mid-game progression here.
+
+### Product proposition
+
+The mod should be understandable without reading its mathematics:
+
+> Learn from new discoveries. Gain experience while mastering a new grave decoration. Then build more because your graveyard needs them, not because one cheap stone fence is the best technology farm.
+
+The qualitative Study cue is part of this proposition, not decorative UI: it makes the intended progression route legible to a first-time player.
+
+### Design implication
+
+Model F remains the leading mechanical model, now paired with a separate Study-discoverability UI behavior.
+
+These are materially independent changes and must receive separate evidence gates before production:
+- finite craft-mastery reward behavior;
+- Study-output redistribution;
+- qualitative Study-value tooltip cue;
+- any red-point smoothing.
