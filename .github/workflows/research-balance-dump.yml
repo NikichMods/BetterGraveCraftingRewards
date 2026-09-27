@@ -1,0 +1,58 @@
+name: Build BGCR Balance Dump
+
+on:
+  push:
+    branches:
+      - 'research/**'
+    paths:
+      - 'research/BalanceDump/**'
+      - '.github/workflows/research-balance-dump.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bgcr-balance-dump-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore research/BalanceDump/BGCRBalanceDump.csproj
+
+      - name: Build Release
+        run: dotnet build research/BalanceDump/BGCRBalanceDump.csproj -c Release --no-restore --nologo
+
+      - name: Stage diagnostic DLL
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          source='research/BalanceDump/bin/Release/BGCRBalanceDump.dll'
+          test -f "$source"
+          mkdir -p artifacts
+          target='artifacts/BGCR Balance Dump 0.1.0.dll'
+          cp "$source" "$target"
+          hash="$(sha256sum "$target" | awk '{print $1}')"
+          echo "SHA-256: $hash"
+          echo "sha256=$hash" >> "$GITHUB_OUTPUT"
+
+      - name: Upload diagnostic DLL
+        uses: actions/upload-artifact@v4
+        with:
+          name: BGCR-Balance-Dump-0.1.0
+          path: artifacts/BGCR Balance Dump 0.1.0.dll
+          if-no-files-found: error
+          retention-days: 7
