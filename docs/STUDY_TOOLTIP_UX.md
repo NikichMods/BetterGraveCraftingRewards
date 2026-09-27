@@ -89,15 +89,19 @@ Problems:
 
 **Preferred.**
 
-Keep the native row and append one short localized phrase:
+Keep the native Study row and extend the same native text widget with one short second line:
 
 English:
-`Study: Not studied (blue icon), reward: high`
+`Study: Not studied (blue icon)`
+`Reward: high`
 
 Russian:
-`Исследование: не изучено (blue icon), награда: высокая`
+`Исследование: не изучено (blue icon)`
+`Награда: высокая`
 
 No exact amount is shown.
+
+The second line is preferred over forcing the phrase onto the first line because it avoids letting one long localization determine the width of the whole tooltip. It adds only one compact text line and no new separator/widget concept.
 
 Advantages:
 - immediately understandable without a manual;
@@ -117,7 +121,7 @@ Bands are based on the **effective total blue Survey output after native runtime
 
 | Effective Study blue | Band | RU |
 |---:|---|---|
-| 1–40 | Low | низкая |
+| 1–40 | Small | небольшая |
 | 41–80 | Medium | средняя |
 | 81–120 | High | высокая |
 | 121+ | Very high | очень высокая |
@@ -198,7 +202,7 @@ Recommended semantic keys:
 - `study.reward.high`
 - `study.reward.very_high`
 
-The code should append a localized `reward: <band>` phrase rather than reconstructing the native `Study: Not studied` text.
+The code should append a localized newline plus `Reward: <band>` rather than reconstructing the native `Study: Not studied` text.
 
 This keeps native wording owned by the game and minimizes localization blast radius.
 
@@ -235,7 +239,7 @@ This property is inherently visual/perceptual, so screenshots/user observation a
 ## Current decision state
 
 Recommended product direction:
-- **four localized text bands appended to the existing native Study row**;
+- **four localized text bands added as a second line inside the existing native Study text widget**;
 - no exact numbers;
 - no pips/stars/color-only encoding;
 - band derived from effective live Survey blue;
