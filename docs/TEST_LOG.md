@@ -128,8 +128,15 @@ Environment correction:
 ## BGCR Blue Economy Dump 0.4.0
 
 - Purpose: enumerate all positive-blue native `CraftDefinition.output` sources needed to verify recovery paths after finite grave-craft mastery.
-- Status: **source prepared; CI/runtime evidence pending**.
+- Status: **CI-built; runtime evidence pending**.
 - Research branch: `research/vanilla-balance-dump`.
+- Exact built source state: `c37f40e8aa19e6358e47c493d459a2bd39d279ec`.
+- CI run: `36340169556`.
+- GitHub Actions artifact: `10938014022` (`BGCR-Blue-Economy-Dump-0.4.0`).
+- Handed DLL: `BGCR-Blue-Economy-Dump-0.4.0.dll`.
+- DLL SHA-256: `a8b7e645e471978d0e1949071bbbd679318fc4dad7d20731a65a190809ededd7`.
+- Artifact ZIP digest: `sha256:38006eb2b4248d0d05582b53e5bab93d02c49f60f2e23d9ff324847ad805862c`.
+- Build result: success.
 - Safety: read-only, no Harmony patches, no game/save mutation.
 - Evidence target:
   1. no `BGCR_BLUE_ECON_ERROR`;
