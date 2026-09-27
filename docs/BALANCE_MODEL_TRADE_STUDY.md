@@ -737,3 +737,48 @@ These are materially independent changes and must receive separate evidence gate
 - Study-output redistribution;
 - qualitative Study-value tooltip cue;
 - any red-point smoothing.
+
+
+## Stage-budget conservation model
+
+The preferred calibration unit is now a recipe/family's normal-use batch rather than its first copy.
+
+For each progression tier, define a reference natural-use count `N_ref` from graveyard-development scenarios, then compare:
+
+`Vanilla stage budget = Study_old + Craft_old * N_ref`
+
+against:
+
+`Rebalanced stage budget = Study_new + finite mastery pool`
+
+The design target is not necessarily exact equality for every recipe, but the two should remain close at the reference natural-use count.
+
+Consequences:
+- below `N_ref`, the rebalance is intentionally more front-loaded toward discovery/mastery;
+- near `N_ref`, ordinary progression remains close to vanilla;
+- above `N_ref`, vanilla keeps paying indefinitely while the rebalance stops, which is the desired anti-grind divergence.
+
+Do not choose one global `N_ref` blindly. Evaluate 5 / 10 / 15 / 20 copies and derive tier-specific reference counts from graveyard progression/milestone scenarios.
+
+### Semantic split by point color
+
+Preferred interpretation:
+
+- **Blue:** conceptual knowledge. Strong Study component + finite per-recipe mastery reward that eventually reaches zero.
+- **Red:** practical work experience. Repeatable, generally monotonic with recipe sophistication/resource burden, with outliers smoothed rather than forced to zero.
+- **Green:** leave unchanged for this behavior unless a grave recipe presents a concrete anomaly.
+
+This gives the mod an understandable rule rather than an arbitrary multiplier.
+
+### Study cue should represent yield, not exact efficiency
+
+The qualitative item-tooltip cue should primarily communicate the magnitude of the one-time research discovery, because that is the hidden information the player currently lacks.
+
+Do not encode an exact Faith-efficiency ranking in the inventory tooltip unless later UX evidence shows it is necessary. Faith cost remains a Study Table decision and can differ from absolute yield.
+
+Candidate initial presentation hypothesis:
+- preserve the vanilla point-color icon(s);
+- add a language-light 1/2/3 magnitude indicator to the existing unstudied line;
+- exact numeric output remains hidden.
+
+Thresholds must be derived from the actual distribution of Survey outputs across the game's studyable items, not hand-picked from grave decorations alone.
