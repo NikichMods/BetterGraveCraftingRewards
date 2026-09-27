@@ -91,7 +91,7 @@ Accepted 0.2.0 conclusions therefore remain limited to the resolved ordinary pro
 - Exact built source state: `04c0afcb31f825879032f5bc6db089caa37e100d`.
 - CI run: `36286375097`.
 - GitHub Actions artifact: `10919804008` (`BGCR-Scope-Completion-Dump-0.3.0`).
-- Handed DLL: `BGCR Scope Completion Dump 0.3.0.dll`.
+- Handed DLL: `BGCR-Scope-Completion-Dump-0.3.0.dll`.
 - DLL SHA-256: `06a81967f10a4dba286970f69385301565f74341bc31d24aec41775dae98bbee`.
 - Artifact ZIP digest reported by GitHub: `sha256:5f28e7ee240e9566d920abccfb1667a3a05c6673e74e04e7a21c730ce7e456f9`.
 - Build result: success.
