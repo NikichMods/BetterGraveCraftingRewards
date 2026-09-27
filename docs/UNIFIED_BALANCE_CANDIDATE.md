@@ -2,7 +2,7 @@
 
 Target: **Graveyard Keeper 1.407**
 
-Status: **numeric product candidate; not accepted for production**
+Status: **product model accepted; production implementation pending evidence gates**
 
 Evidence basis:
 - accepted grave-recipe / Study / recycle dump 0.1.0;
@@ -317,12 +317,8 @@ Do not silently add a `max(vanilla, G2)` rule: that would reintroduce flat 15-po
 
 Research data: **sufficient**.
 
-Balance candidate G2: **reviewable, not accepted**.
+Balance model G2: **accepted by the user for production design, including scale-over-vanilla precedence**.
 
-Production evidence gate: **BLOCKED** because:
-1. product acceptance of G2 exact numbers is still pending;
-2. old-save/mastery-counter initialization policy is not yet accepted;
-3. the exact manufacturing-only counter commit point and UI projection lifecycle must be made reviewable before source mutation;
-4. Study-value tooltip cue is a separate behavior change and requires its own evidence gate.
+Production implementation is governed by `docs/PRODUCTION_EVIDENCE_GATE.md`. The accepted product rule is that the coherent G2 scale outranks conflicting local vanilla rewards; do not clamp first-craft values back to vanilla merely to reduce numerical deviation.
 
 No additional broad balance probe is justified.
