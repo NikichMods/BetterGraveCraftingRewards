@@ -242,3 +242,124 @@ Check Game of Crone and Better Save Soul families separately so free/quest unloc
 - Balance model family: trade study favors Model C.
 - Exact reward table: **not yet accepted**.
 - Production evidence gate: remains **BLOCKED** until the first numeric table is selected and its affected recipe set/invariants are made reviewable.
+
+
+## First numeric candidate — C1 (proposal, not accepted)
+
+Purpose: test the leading Model C shape with conservative inflation and a 15-blue soft ceiling.
+
+### Core / base progression
+
+| Recipe | Vanilla B | C1 B |
+|---|---:|---:|
+| grave_bot_wd_1 | 0 | 0 |
+| grave_top_wd_tab_1 | 0 | 0 |
+| grave_top_wd_cross_1 | 0 | 0 |
+| grave_top_stn_plate_1 | 0 | 2 |
+| grave_bot_stn_1 | 5 | 3 |
+| grave_bot_stn_2 | 5 | 3 |
+| grave_top_stn_cross_1 | 5 | 4 |
+| grave_top_stn_plate_2 | 5 | 4 |
+| grave_top_stella_stn_1 | 5 | 5 |
+| grave_top_stn_cross_2 | 5 | 5 |
+| grave_top_sculpt_stn_1 | 10 | 10 |
+| grave_top_sculpt_stn_2 | 10 | 10 |
+| grave_bot_mrb_1 | 0 | 6 |
+| grave_top_mrb_cross_1 | 0 | 6 |
+| grave_bot_mrb_2 | 0 | 8 |
+| grave_top_mrb_cross_2 | 0 | 8 |
+| grave_top_stella_mrb_1 | 15 | 10 |
+| grave_top_sculpt_mrb_1 | 15 | 15 |
+| grave_top_sculpt_mrb_2 | 15 | 15 |
+
+Note: `grave_top_stella_mrb_1` is intentionally lower than its vanilla 15 in this first candidate because its quality/tier neighbors are zero-reward recipes and it is not necessary to preserve an isolated outlier while smoothing the curve. This point should be revisited before acceptance; avoiding unnecessary nerfs may justify leaving it at 15.
+
+### Game of Crone / refugee families
+
+| Recipe | Vanilla B | C1 B |
+|---|---:|---:|
+| grave_bot_stn_3 | 0 | 4 |
+| grave_bot_stn_4 | 0 | 5 |
+| grave_top_memorial_stn_1 | 6 | 6 |
+| grave_bot_stn_5 | 2 | 7 |
+| grave_bot_mrb_3 | 0 | 7 |
+| grave_top_memorial_mrb_1 | 6 | 9 |
+| grave_top_womansaver_stn_1 | 15 | 15 |
+| grave_top_highangel_stn_1 | 15 | 15 |
+| grave_bot_mrb_4 | 0 | 8 |
+| grave_bot_mrb_5 | 2 | 10 |
+| grave_top_womansaver_mrb_1 | 15 | 15 |
+| grave_top_highangel_mrb_1 | 15 | 15 |
+
+### Better Save Soul families
+
+| Recipe | Vanilla B | C1 B |
+|---|---:|---:|
+| grave_bot_stn_6 | 0 | 8 |
+| grave_bot_stn_7 | 5 | 10 |
+| grave_bot_stn_8 | 10 | 12 |
+| grave_bot_mrb_6 | 0 | 10 |
+| grave_bot_mrb_7 | 5 | 12 |
+| grave_bot_mrb_8 | 15 | 15 |
+| grave_top_sculpt_stn_4 | 15 | 15 |
+| grave_top_sculpt_stn_5 | 15 | 15 |
+| grave_top_sculpt_mrb_4 | 15 | 15 |
+| grave_top_sculpt_mrb_5 | 15 | 15 |
+
+### Excluded from C1 mutation
+
+`grave_top_sarcofag_mrb_1` remains at vanilla 0 in C1.
+
+Reason: it has no technology owner in the current dump and its exact quest/availability position has not been needed to establish the main balance problem. Leaving it unchanged avoids broadening the first behavior change without evidence that it participates in the problematic incentive curve.
+
+### Scale checks
+
+- one-of-each final-craft checksum: vanilla **266 blue** -> C1 **357 blue**;
+- delta: **+91 blue**;
+- +91 is about **2.45%** of the reconstructed 3715-blue technology-tree cost;
+- Study checksum remains **1544 blue**;
+- component-craft rewards remain unchanged.
+
+This checksum deliberately overweights rare recipes relative to normal play, but it is a useful inflation bound/check.
+
+### Normal-play block checks
+
+Representative early pair:
+- `grave_bot_stn_1 + grave_top_stn_plate_1`;
+- vanilla: 5 blue;
+- C1: 5 blue.
+
+For ten graves, this remains 50 blue total. C1 therefore reduces the basic fence's individual farming payout without reducing this simple normal early-grave upgrade block.
+
+Representative advanced-stone pair:
+- `grave_bot_stn_2 + grave_top_sculpt_stn_2`;
+- vanilla: 15 blue;
+- C1: 13 blue.
+
+The small reduction is intentional anti-loop pressure; the sculpture remains a strong advanced reward.
+
+Representative first-marble pair:
+- `grave_bot_mrb_1 + grave_top_mrb_cross_1`;
+- vanilla: 0 blue;
+- C1: 12 blue.
+
+For ten graves, this adds 120 blue, about 3.23% of total vanilla blue technology cost. This is the most material normal-play inflation point in C1 and should be the main pacing decision for user review.
+
+### Repeat-loop check
+
+C1 changes the cheapest stone-fence loops:
+
+- `grave_bot_stn_1`: 5 -> 3 blue, net repeat loss remains one basic stone block;
+- `grave_bot_stn_2`: 5 -> 3 blue, net repeat loss remains one basic stone block.
+
+This avoids simply moving the same cheap one-block loop from the first fence to the second fence.
+
+Later recyclable items remain stronger but require more advanced components and/or faith. In particular the vanilla 10-blue stone sculptures are preserved rather than increased, so C1 does not create a new higher reward there.
+
+### Open product decisions before C1 can become accepted
+
+1. Is 6 blue each for the first marble fence/cross an acceptable normal-play acceleration, or should the first marble step be 5/5?
+2. Should `grave_top_stella_mrb_1` keep its vanilla 15 instead of being smoothed to 10?
+3. Should late DLC recipes remain capped at 15 for vanilla character, or should the very highest tiers rise above 15?
+
+Until these are decided, C1 is a comparison candidate only and production remains BLOCKED.
