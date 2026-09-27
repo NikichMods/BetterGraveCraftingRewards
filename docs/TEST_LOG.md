@@ -86,7 +86,7 @@ Accepted 0.2.0 conclusions therefore remain limited to the resolved ordinary pro
 ## BGCR Scope Completion Dump 0.3.0
 
 - Purpose: close the final carved-marble, progression-graph, workstation-availability and aggregate tech-cost gaps.
-- Status: **CI-built; runtime evidence pending**.
+- Status: **runtime-complete; accepted as final scope-completion evidence**.
 - Research branch: `research/vanilla-balance-dump`.
 - Exact built source state: `04c0afcb31f825879032f5bc6db089caa37e100d`.
 - CI run: `36286375097`.
@@ -102,3 +102,24 @@ Accepted 0.2.0 conclusions therefore remain limited to the resolved ordinary pro
   3. at least one `BGCR_MQ_CRAFT` covering `marble_plate_3:1/:2/:3`;
   4. complete `BGCR_TECH` parent/price rows and `BGCR_TECH_TOTALS`;
   5. relevant `BGCR_BLUEPRINT` rows sufficient to map the observed crafting stations to their unlock path.
+
+
+### Runtime result — BGCR Scope Completion Dump 0.3.0
+
+User-returned log: `LogOutput(20260927-113229).log`.
+
+Observed:
+- exact `BGCR Scope Completion Dump 0.3.0` loaded on Graveyard Keeper 1.407;
+- no `BGCR_SCOPE_ERROR`;
+- `BGCR_MQ_CRAFT` resolved `marble_plate_3` as the native multi-quality producer for `marble_plate_3:1/:2/:3`;
+- 187 technology definitions with parents/prices were dumped;
+- 26 relevant blueprint rows were dumped;
+- terminal marker: `BGCR_SCOPE_DONE|multiquality_crafts=1|techs=187|blueprints=26`.
+
+The final evidence target is satisfied. No further broad balance-data probe is planned.
+
+Environment correction:
+- Better Save Soul Rebalance 1.1.1 was active before the dump and changed selected Soul technology prices.
+- The dumped aggregate was `b=4615`.
+- Accepted Better Save Soul Rebalance source records the exact stock baseline: the mod adds 150 + 200 + 250 + 300 = 900 blue to four Soul technology prices while leaving `soul_writing_additions` at 10 blue.
+- Therefore the reconstructed vanilla Graveyard Keeper 1.407 aggregate technology-tree blue cost for this all-DLC dataset is **3715 blue**.
