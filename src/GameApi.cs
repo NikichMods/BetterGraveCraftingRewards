@@ -171,10 +171,30 @@ namespace BetterGraveCraftingRewards
             }
         }
 
+        internal static bool ReadBool(object obj, string name)
+        {
+            object value = Get(obj, name);
+            return value != null && Convert.ToBoolean(value);
+        }
+
         internal static bool IsPlayer(object wgo)
         {
-            object value = Get(wgo, "is_player");
-            return value != null && Convert.ToBoolean(value);
+            return ReadBool(wgo, "is_player");
+        }
+
+        internal static bool CompletionAwardsTechPointsToPlayer(
+            object craftComponent,
+            object craft,
+            object other)
+        {
+            if (IsPlayer(other))
+                return true;
+
+            if (ReadBool(craft, "is_auto"))
+                return true;
+
+            object station = Get(craftComponent, "wgo");
+            return ReadBool(station, "is_current_craft_gratitude");
         }
 
         internal static object NewItem(string id, int value)
