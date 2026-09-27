@@ -257,13 +257,36 @@ namespace BetterGraveCraftingRewards
                 return;
 
             int count = ReadCompletedCount(rule);
-            if (count < rule.MaxCompletedCount)
+            if (count >= rule.MaxCompletedCount)
             {
-                count++;
-                GameApi.SetPlayerInt(rule.CounterParam, count);
+                ProjectRule(rule, count);
+                return;
             }
 
+            int awardedRed = rule.RewardAfterCompleted(
+                rule.RedStart,
+                count);
+
+            int awardedBlue = rule.RewardAfterCompleted(
+                rule.BlueStart,
+                count);
+
+            count++;
+            GameApi.SetPlayerInt(rule.CounterParam, count);
             ProjectRule(rule, count);
+
+            Plugin.Log.LogInfo(
+                "BGCR_MASTERY"
+                + "|design=" + rule.DesignId
+                + "|completed=" + count
+                + "|awarded_r=" + awardedRed
+                + "|awarded_b=" + awardedBlue
+                + "|next_r=" + rule.RewardAfterCompleted(
+                    rule.RedStart,
+                    count)
+                + "|next_b=" + rule.RewardAfterCompleted(
+                    rule.BlueStart,
+                    count));
         }
 
         private static void ProjectAllFromCurrentSave()
