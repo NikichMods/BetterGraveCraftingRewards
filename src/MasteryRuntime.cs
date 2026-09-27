@@ -229,12 +229,17 @@ namespace BetterGraveCraftingRewards
                 return null;
 
             object other = GameApi.Get(craftComponent, "other_obj");
-            if (!GameApi.IsPlayer(other))
-                return null;
-
             object craft = GameApi.Get(craftComponent, "current_craft");
             if (craft == null)
                 return null;
+
+            if (!GameApi.CompletionAwardsTechPointsToPlayer(
+                craftComponent,
+                craft,
+                other))
+            {
+                return null;
+            }
 
             BalanceRule rule;
             return RuleByCraft.TryGetValue(GameApi.Id(craft), out rule)
