@@ -807,3 +807,24 @@ The actual guardrails are:
 6. progression is legible and internally consistent.
 
 Therefore a sequence such as increasing mastery starts across tiers should be judged by its logic and total stage budget first. If a Marble recipe needs to move from vanilla 0 to a substantially higher value to satisfy the coherent curve, that is a successful repair rather than excessive deviation.
+
+
+## Red-direction update — finite mastery is now preferred
+
+Accepted 0.5.0 evidence supersedes the earlier preference to keep grave-craft red fully repeatable.
+
+The integrated direction is now:
+
+- **Blue:** one-time Study emphasis + finite paired manufacturing mastery to zero.
+- **Red:** finite paired manufacturing mastery as well, with a coherent increasing start value; no automatic Study redistribution required yet.
+- **Green:** unchanged unless a concrete grave-recipe anomaly is independently established.
+- **Installation:** preserve vanilla +1 red per decoration installed.
+- **Components:** preserve their native r/g/b rewards.
+
+This creates a cleaner rule for the player:
+
+> A new grave design teaches you a finite amount while you learn to make it. More advanced designs teach more. Once mastered, further copies are made for the graveyard; their materials and installation still reward ordinary work.
+
+The same per-recipe successful-craft counter can drive both red and blue reward projection, avoiding two independent state systems.
+
+The exact red start ladder, especially wooden recipes and DLC families, remains a product-number decision.
