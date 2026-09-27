@@ -351,3 +351,117 @@ S2 and S3 are both viable for user/product review:
 Because Study is optional, costs Faith/Science, requires the item to be carried to the table, and is now planned to receive a qualitative value cue, S3's apparent front-loading is less automatic than the raw totals suggest.
 
 No exact Study ladder is accepted yet.
+
+
+## Red finite-mastery analysis — after accepted 0.5.0
+
+### Why red should join mastery
+
+The project no longer treats red as an unlimited "hands-on work" reward.
+
+The same incentive defect exists for red:
+- early grave decoration can be mass-produced for technology points;
+- the classic stone-fence loop simultaneously yields red and blue;
+- advanced base-game grave recipes often remain stuck at 5 red despite much higher input sophistication;
+- red technology demand is high enough that players can rationally grind these loops.
+
+At the same time, 0.5.0 proves the wider game has abundant independent red channels, so removing the infinite grave-manufacturing tail does not make graves the sole recovery source.
+
+### Natural-use protection already present in vanilla
+
+Two red streams remain linear with genuine graveyard development even if grave **manufacturing** mastery becomes finite:
+
+1. required component production continues to emit red;
+2. installing each decoration on a grave emits +1 red.
+
+This is a useful distinction:
+- a grinder who repeatedly manufactures/dismantles one fence loses the final craft reward after mastery;
+- a player who actually decorates 10–20 graves still receives component-work red plus installation red for every useful copy.
+
+### Shared paired mastery hypothesis
+
+For the first red quantitative comparison, use the same paired diminishing shape already favored for blue:
+
+`S, S, S-1, S-1, ... 1, 1, 0`.
+
+Test the same strictly increasing core-tier start ladder:
+
+`5 -> 6 -> 7 -> 8 -> 9 -> 10`
+
+for:
+1. Stone;
+2. Carved stone;
+3. Grave monuments;
+4. Marble;
+5. Carved marble;
+6. Crypts.
+
+This is intentionally simple and legible: first-craft mastery becomes more valuable as the technology becomes more sophisticated.
+
+### Final grave-craft red only
+
+Representative vanilla final-craft red per natural batch unit remains:
+
+`7 -> 7 -> 5 -> 10 -> 10 -> 5`
+
+because pair stages contain fence + marker while Monument/Crypt stages use one representative marker.
+
+Comparison:
+
+| Copies N | Vanilla final-craft red | Paired mastery red | Delta |
+|---:|---:|---:|---:|
+| 5 | 220 | 325 | +105 |
+| 10 | 440 | 530 | +90 |
+| 15 | 660 | 615 | -45 |
+| 20 | 880 | 634 | -246 |
+| 30 | 1320 | 634 | -686 |
+
+Against the 5780-red base-game technology denominator:
+- N=5 delta: +1.82%;
+- N=10: +1.56%;
+- N=15: -0.78%;
+- N=20: -4.26%.
+
+This is an unusually good shape for the product goal:
+- normal early/mid useful batches become slightly more rewarding;
+- around 10–15 copies the system stays close to vanilla;
+- long-run production diverges sharply downward;
+- the lifetime final-craft red pool is finite at **634 red** on this representative core path.
+
+### Unchanged red streams
+
+The table above excludes component red and grave-installation red because they are unchanged by this candidate and therefore cancel in candidate-vs-vanilla deltas.
+
+Installation alone contributes on the representative path:
+
+- pair stages: +2 red per batch unit;
+- single-marker stages: +1 red per batch unit;
+- total across the six stages: **+10 red per N**.
+
+Thus N=10 normal use receives another 100 red simply for actually installing the decorations.
+
+Component production adds substantially more red and generally scales with real material throughput.
+
+### Red Study compensation
+
+The quantitative result means **red Study compensation is not required by default**.
+
+Unlike blue, where redistribution into Study is central to the product concept, the shared red mastery ladder already preserves stage-scale income around the target natural batch while improving late-tier reward coherence.
+
+Adding red to grave Study remains a valid host-native option because vanilla Study routinely gives 50/100/150 red for advanced practical items. However doing so should be justified by a specific stage deficit, not added automatically.
+
+Current preferred first candidate:
+- Blue: Study-heavy + finite paired mastery.
+- Red: finite paired mastery with coherent tier starts; no new grave-Study red yet.
+- Installation +1 red: unchanged.
+- Component/gathering red: unchanged.
+
+### Wooden-tier requirement
+
+Red mastery must also cover wooden grave decorations.
+
+Leaving wood unlimited would preserve a cheap red-only farm even after stone/marble recipes are fixed.
+
+Exact wooden starts are still open because the three early recipes have different complexity and rewards (2/3/5 red). They should form a short lower ladder that flows cleanly into the first stone start of 5 without creating a new red bottleneck.
+
+This is the remaining red-number design task, not a research-data gap.
