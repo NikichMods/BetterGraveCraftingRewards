@@ -782,3 +782,28 @@ Candidate initial presentation hypothesis:
 - exact numeric output remains hidden.
 
 Thresholds must be derived from the actual distribution of Survey outputs across the game's studyable items, not hand-picked from grave decorations alone.
+
+
+## Design correction — local vanilla values are not preservation targets
+
+The mod's goal is to preserve **vanilla character and overall progression pacing**, not to preserve incoherent local reward values.
+
+A large numerical change to one recipe is acceptable, and sometimes required, when the vanilla value is itself the established balance defect.
+
+In particular:
+
+- zero-blue Marble / Carved-marble recipes must not be kept artificially low merely because moving them to a coherent progression value looks like a large percentage change from vanilla;
+- the same progression semantics should apply across stone, carved stone, monuments, marble and carved marble;
+- later/more sophisticated tiers should feel materially more rewarding on their first/mastery crafts unless a verified economic constraint justifies an exception;
+- numerical restraint is evaluated at the **system/stage level**, not recipe-by-recipe against vanilla.
+
+The actual guardrails are:
+
+1. stage-level red/blue availability remains compatible with contemporary technology costs;
+2. normal 5/10/15/20-use scenarios remain viable without requiring exploit farming;
+3. a bad technology purchase remains recoverable through the wider game economy;
+4. no recipe becomes a new dominant infinite grind;
+5. finite mastery plus Study does not create destructive early acceleration or late surplus beyond the intended envelope;
+6. progression is legible and internally consistent.
+
+Therefore a sequence such as increasing mastery starts across tiers should be judged by its logic and total stage budget first. If a Marble recipe needs to move from vanilla 0 to a substantially higher value to satisfy the coherent curve, that is a successful repair rather than excessive deviation.
