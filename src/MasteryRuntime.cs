@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -263,30 +265,9 @@ namespace BetterGraveCraftingRewards
                 return;
             }
 
-            int awardedRed = rule.RewardAfterCompleted(
-                rule.RedStart,
-                count);
-
-            int awardedBlue = rule.RewardAfterCompleted(
-                rule.BlueStart,
-                count);
-
             count++;
             GameApi.SetPlayerInt(rule.CounterParam, count);
             ProjectRule(rule, count);
-
-            Plugin.Log.LogInfo(
-                "BGCR_MASTERY"
-                + "|design=" + rule.DesignId
-                + "|completed=" + count
-                + "|awarded_r=" + awardedRed
-                + "|awarded_b=" + awardedBlue
-                + "|next_r=" + rule.RewardAfterCompleted(
-                    rule.RedStart,
-                    count)
-                + "|next_b=" + rule.RewardAfterCompleted(
-                    rule.BlueStart,
-                    count));
         }
 
         private static void ProjectAllFromCurrentSave()
