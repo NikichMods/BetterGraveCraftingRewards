@@ -110,9 +110,12 @@ Worker path strips technology-point items before inventory placement.
 Patch `CraftComponent.ProcessFinishedCraft()`.
 
 Prefix:
-- capture the design ID only when:
-  - `current_craft` is an explicitly recognized manufacturing variant for an in-scope design;
-  - `other_obj != null && other_obj.is_player`.
+- capture the design ID only when `current_craft` is an explicitly recognized manufacturing variant for an in-scope design **and** the native completion path awards its tech-point output to the active player:
+  - direct player craft (`other_obj.is_player`); or
+  - native auto completion, which uses the tech-point-dropping player/auto branch; or
+  - Soul Gratitude completion (`wgo.is_current_craft_gratitude`), whose worker/gratitude branch explicitly preserves and drops tech-point items.
+
+Ordinary linked-worker/zombie production without Soul Gratitude is excluded because the native path removes tech-point items before inventory placement.
 
 Postfix:
 - increment that design's player parameter;
@@ -201,7 +204,8 @@ Uninstalling the mod leaves inert BGCR player params in the save; reinstalling r
 - component crafting rewards unchanged;
 - +1 red installation reward unchanged;
 - repair/removal/dismantling rewards unchanged;
-- zombie/worker crafts do not consume mastery and continue receiving no r/g/b manufacturing reward;
+- ordinary zombie/worker crafts do not consume mastery and continue receiving no r/g/b manufacturing reward;
+- Soul Gratitude manufacturing does consume mastery when its native completion path awards the tech points to the player;
 - unrelated crafts unchanged;
 - one design cannot be re-mastered by switching workstation recipe variants.
 
@@ -214,8 +218,9 @@ Candidate runtime must prove:
 4. save/reload preserves the count and projects the next reward;
 5. switching to another save does not inherit the first save's projected reward;
 6. installation/removal/repair/dismantling do not advance the count;
-7. worker/zombie production does not advance the count;
-8. after mastery reaches zero, physical output still crafts normally and no r/b tech-point drop is emitted.
+7. ordinary worker/zombie production does not advance the count;
+8. one Soul Gratitude grave craft advances the shared count if that path awards its native r/b output;
+9. after mastery reaches zero, physical output still crafts normally and no r/b tech-point drop is emitted.
 
 ## Change C — qualitative Study-value cue in item tooltip
 
