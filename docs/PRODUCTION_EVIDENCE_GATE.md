@@ -229,12 +229,19 @@ Candidate runtime must prove:
 The host presentation seam is known:
 `ItemDefinition.GetTooltipData()` already renders the incomplete Survey line using the Survey output's technology-point colors while deliberately hiding numeric quantities.
 
-Still unresolved:
-- exact user-facing visual language;
-- threshold bands across the whole Study reward distribution;
-- localization strategy.
+Product-design research now has a preferred candidate in `docs/STUDY_TOOLTIP_UX.md`:
+- append a short localized qualitative reward label to the existing native unstudied Survey row;
+- four bands: 1–40 Low, 41–80 Medium, 81–120 High, 121+ Very high;
+- derive the band from effective live Survey blue after the same native runtime processing used by the tooltip;
+- show it only for the 23 active G2 grave Study targets and only while Study is incomplete;
+- preserve the vanilla completed row exactly.
 
-This is an independent UX behavior and must not be bundled into the first mastery candidate merely to reduce test cycles.
+Still unresolved before READY:
+- user acceptance of this UX contract;
+- narrow verification that the native Survey text row can be identified and extended robustly without affecting other tooltip rows;
+- longest-language visual fit/width behavior in the standard item tooltip.
+
+This remains an independent UX behavior and must not be bundled into production until those points are closed.
 
 ## Integration decision
 
