@@ -436,3 +436,77 @@ This does not mean every source is available at every instant; individual techno
 A player who spends blue poorly is not dependent on an infinite grave-decoration farm as the only recovery mechanism.
 
 No further broad source enumeration is justified before balance selection.
+
+
+## Research-method checkpoint — red economy
+
+### Question
+
+Determine whether grave-decoration red-point rewards have the same structural problem as blue rewards:
+
+- cheap early grave recipes act as an attractive red grind;
+- later/more expensive grave decorations fail to improve red reward coherently;
+- reducing grave red repeatability would risk creating a real progression bottleneck because red demand is high.
+
+### Existing evidence
+
+Accepted 0.1.0 / 0.2.0 / 0.3.0 data already proves:
+
+- base-game grave final-craft red rewards are irregular and largely flat:
+  - early stone fence: 2 red;
+  - many stone headstones: 5 red;
+  - stone sculptures: 5 red;
+  - early marble fence/cross: 5 red;
+  - carved marble fence/cross: 5 red;
+  - marble sculptures: 5 red;
+- advanced component production adds additional red:
+  - basic stone block: 3 red;
+  - polished stone: 3 red;
+  - carved stone: 2 red;
+  - marble block: 2 red per three produced;
+  - polished marble: 2 red;
+  - carved marble: 3 red;
+  - complex iron/gold detail production adds further red.
+
+Therefore final-recipe reward alone is not enough to judge red progression.
+
+The early recyclable stone-fence loop is already known to generate both colors:
+- final `grave_bot_stn_1`: 2 red + 5 blue;
+- dismantling returns one of two stone blocks;
+- replacing the lost `stone_plate_1` generates another 3 red;
+- repeat loop therefore yields roughly **5 red + 5 blue per net basic stone block**, before counting raw-resource gathering rewards.
+
+This makes the grind problem explicitly multi-currency.
+
+### Static source finding
+
+Pinned 1.407 source establishes another native red channel:
+
+- `GameBalance.works_data` stores `WorkDefinition.reward`;
+- `WorldGameObject.RewardForWork()` applies that reward to the player;
+- `ObjectDefinition` also owns `drop_items` and `add_player_param_after_hp_0`, which can independently contain/apply technology-point rewards.
+
+Therefore a red-economy inventory that reads only `CraftDefinition.output` would be incomplete.
+
+### File-vs-probe decision
+
+`GameBalance.LoadGameBalance()` loads `Resources.Load<GameBalance>("game_data")`.
+
+The exact balance rows are therefore stored as a serialized Unity Resources asset rather than a convenient standalone JSON/CSV. Offline extraction would require Unity asset parsing plus managed type metadata and may require multiple resource files.
+
+For the narrow question above, a read-only runtime enumeration of the already-deserialized `GameBalance` is materially simpler, less assumption-heavy and more attributable.
+
+### Decision
+
+Create one narrow **BGCR Red Economy Dump 0.5.0** that emits only positive-red sources from:
+
+1. `craft_data`;
+2. `works_data`;
+3. object rows whose `work` links to a positive-red WorkDefinition, whose `drop_items` contain red tech points, or whose `add_player_param_after_hp_0` contains red.
+
+The probe must remain read-only and perform no Harmony patches or mutations.
+
+This evidence will be used to decide whether red should:
+- remain fully repeatable;
+- use a softer diminishing-mastery curve with a nonzero floor;
+- or receive another progression rule.
