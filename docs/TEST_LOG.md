@@ -48,7 +48,7 @@ Research conclusion:
 ## BGCR Material Dump 0.2.0
 
 - Purpose: recursively enumerate native producer chains behind direct grave-decoration crafting materials.
-- Status: **CI-built; runtime evidence pending**.
+- Status: **runtime-complete; accepted with a scoped follow-up gap**.
 - Research branch: `research/vanilla-balance-dump`.
 - Exact built source state: `caf3d66435567b299397e3ecb71b1bf9479d1f13`.
 - CI run: `36285157007`.
@@ -62,3 +62,22 @@ Research conclusion:
   1. no `BGCR_MATERIAL_ERROR`;
   2. one complete dump ending in `BGCR_MATERIAL_DONE`;
   3. producer chains sufficient to derive material processing depth, component-craft r/g/b generation, energy/time and terminal resources for grave-decoration inputs.
+
+
+### Runtime result — BGCR Material Dump 0.2.0
+
+User-returned log: `LogOutput(20260927-013608).log`.
+
+Observed:
+- Graveyard Keeper 1.407 runtime;
+- exact `BGCR Material Dump 0.2.0` loaded;
+- no `BGCR_MATERIAL_ERROR`;
+- terminal marker: `BGCR_MATERIAL_DONE|materials=67|producer_crafts=959|roots=11|max_depth=3`;
+- direct grave-material set: 16 items.
+
+Probe result is accepted for the material recipes it resolved. It also exposed two design limits that require one narrower follow-up rather than deeper recursion:
+
+1. `marble_plate_3:1/:2/:3` were reported as roots even though they are craftable; static inspection confirms these are multi-quality outputs and exact matching on `Item.id` misses the host's `multiquality_items` representation.
+2. 882 of 959 producer rows were generic `MixedCraft` alchemy combinations reached through water/oil/faith-adjacent dependencies. They are valid host recipes but irrelevant to grave-decoration balance and demonstrate that unrestricted recursive producer traversal is too broad.
+
+Accepted 0.2.0 conclusions therefore remain limited to the resolved ordinary production paths; the next probe must target the missing multi-quality producer plus progression/economy metadata directly rather than recurse further.
