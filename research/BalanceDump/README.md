@@ -1,22 +1,20 @@
-# BGCR Scope Completion Dump 0.3.0
+# BGCR Blue Economy Dump 0.4.0
 
-Final research-only read-only probe for **Better Grave Crafting Rewards**.
+Research-only read-only probe for **Better Grave Crafting Rewards**.
 
-Purpose: close the remaining evidence gaps before balance-model trade study.
+Purpose: enumerate Graveyard Keeper 1.407 craft-data rows that produce positive blue technology points, so the project can verify non-grave recovery paths before making grave-craft blue finite.
 
 The probe:
 - does not patch game methods;
 - does not mutate recipes, technology data, inventory, player state, or save state;
-- does not recurse material production;
-- logs the native multi-quality carved-marble craft;
-- logs technology prices and parent links so cumulative progression cost can be derived;
-- logs blueprint/unlock data only for workstations already observed in accepted grave/material evidence;
-- logs aggregate technology-tree point cost;
-- dumps once and becomes inert.
+- does not recurse material graphs;
+- emits only `CraftDefinition` rows whose native `output` contains positive blue points;
+- records Survey/one-time/repeatable classification, station, needs/output, visibility/automation flags, and owning technology/DLC metadata;
+- dumps once after gameplay starts and then becomes inert.
 
 Runtime evidence required:
-1. replace the old BGCR research DLL with `BGCR Scope Completion Dump 0.3.0.dll`;
+1. replace the previous BGCR research DLL with `BGCR-Blue-Economy-Dump-0.4.0.dll`;
 2. launch Graveyard Keeper and load any save until normal gameplay is active;
 3. return `LogOutput.log`.
 
-No crafting, Study action, grave interaction, inventory setup, or special save state is required.
+No crafting, Study action, inventory setup, or save mutation is required.
