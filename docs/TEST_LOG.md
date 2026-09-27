@@ -357,3 +357,41 @@ Optional later cross-save check:
 - load another save normally;
 - F6 -> `Snapshot current save`;
 - use `BGCR_TEST_SAVE` to verify that live projections follow that save's own counter.
+
+
+## Runtime acceptance result — Phase 2
+
+User-returned log: `LogOutput(20260927-225636).log`.
+
+Accepted observations:
+- Better Grave Crafting Rewards 0.1.0 and BGCR Test Console 0.1.0 both loaded against Graveyard Keeper 1.407;
+- production startup again reported `G2 active | designs=41 | craftVariants=47 | studies=23`;
+- harness validation passed:
+  - `grave_bot_mrb_1` projected 8R/8B while keeping physical output x1;
+  - both `grave_bot_stn_1` manufacturing variants projected the same 4R/4B at synthetic completed count 2 and kept physical output x1;
+  - `surv:grave_bot_stn_1` = 40B, one-time, Faith 3;
+  - `surv:grave_bot_mrb_1` = 90B, one-time;
+  - `surv:grave_top_sculpt_stn_5` = 160B, one-time;
+- endpoint probe passed:
+  - at synthetic completed count 10, both stone-fence manufacturing variants projected 0R/0B while physical output remained x1;
+  - original real save count was 4;
+  - after restoration, both variants returned to the correct live next reward 3R/3B;
+- routing probe passed:
+  - direct player context captured `grave_bot_stn_6`;
+  - ordinary worker context returned null;
+  - Soul Gratitude context captured `grave_bot_stn_6`;
+- no `BGCR_TEST_ERROR` occurred.
+
+**Phase 2 status: PASS.**
+
+This closes:
+- formerly-zero-blue Marble projection;
+- representative Study mutation values;
+- alternate manufacturing-variant shared projection;
+- zero-reward endpoint preserving physical output;
+- ordinary-worker exclusion;
+- Soul Gratitude routing;
+- test-harness restoration of temporary mastery state.
+
+Remaining acceptance item:
+- cross-save projection/isolation, using the already-built read-only `Snapshot current save` action. No new build is required.
