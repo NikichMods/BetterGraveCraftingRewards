@@ -1,25 +1,22 @@
-# BGCR Material Dump 0.2.0
+# BGCR Scope Completion Dump 0.3.0
 
-Research-only read-only probe for **Better Grave Crafting Rewards**.
+Final research-only read-only probe for **Better Grave Crafting Rewards**.
 
-Purpose: trace the loaded Graveyard Keeper 1.407 production chain behind the direct materials used by grave decorations.
+Purpose: close the remaining evidence gaps before balance-model trade study.
 
 The probe:
 - does not patch game methods;
-- does not mutate recipes, rewards, inventory, player state, or save state;
-- waits until normal gameplay has started;
-- finds each grave decoration's primary craft and collects its direct inputs;
-- walks backward through native producer recipes for those inputs until terminal/root resources are reached;
-- logs producer inputs, outputs, red/green/blue rewards, energy/time, workstation and prerequisite technologies;
-- emits localized material names where available;
-- dumps once and then becomes inert.
-
-This specifically closes the remaining balance questions around material processing depth, component-crafting tech-point generation and repeatable-loop efficiency.
+- does not mutate recipes, technology data, inventory, player state, or save state;
+- does not recurse material production;
+- logs the native multi-quality carved-marble craft;
+- logs technology prices and parent links so cumulative progression cost can be derived;
+- logs blueprint/unlock data only for workstations already observed in accepted grave/material evidence;
+- logs aggregate technology-tree point cost;
+- dumps once and becomes inert.
 
 Runtime evidence required:
-1. remove/replace the old `BGCR Balance Dump 0.1.0.dll`;
-2. install `BGCR Material Dump 0.2.0.dll` in the normal BepInEx plugins folder;
-3. launch Graveyard Keeper and load any save until normal gameplay is active;
-4. return the generated `LogOutput.log`.
+1. replace the old BGCR research DLL with `BGCR Scope Completion Dump 0.3.0.dll`;
+2. launch Graveyard Keeper and load any save until normal gameplay is active;
+3. return `LogOutput.log`.
 
 No crafting, Study action, grave interaction, inventory setup, or special save state is required.
