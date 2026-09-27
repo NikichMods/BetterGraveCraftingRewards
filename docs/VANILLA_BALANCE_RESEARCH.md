@@ -267,3 +267,30 @@ Before balance-model trade study, collect only the remaining decision-relevant f
 4. aggregate vanilla technology-tree blue cost as the denominator for pacing/inflation analysis.
 
 After these four fields are established, production-economy evidence is considered sufficient. Normal-play scenarios (representative counts of upgraded graves) are analysis cases derived from the verified table and do not require more runtime discovery.
+
+
+## Research-method checkpoint — final scope-completion probe
+
+### Question
+
+Close only the remaining evidence gaps before balance-model trade study:
+
+- identify the native multi-quality producer for `marble_plate_3:1/:2/:3`;
+- recover the prerequisite graph and prices for technologies relevant to grave-decoration progression;
+- map availability of the crafting stations observed in accepted grave/material evidence;
+- obtain the aggregate technology-tree point cost needed to judge inflation scale.
+
+### Existing path
+
+The accepted 0.1.0 and 0.2.0 dumps already prove grave recipes, rewards, recycling, Study, most component chains and their craft rewards. Static 1.407 inspection proves the multi-quality mechanism and TechDefinition parent/unlock fields, but executable source does not contain the exact loaded balance rows/prices/links.
+
+### Decision
+
+One final read-only scope-completion dump is justified. It must **not** recurse material producers again.
+
+It will:
+- emit only the carved-marble multi-quality producer(s);
+- emit technology definitions/prices/parents so progression paths and total tree cost can be calculated offline;
+- emit only object-blueprint records whose `out_obj` matches workstations already observed in accepted 0.1/0.2 evidence.
+
+After that runtime evidence, no further broad balance-data probe is planned unless the returned data reveals a concrete missing owner/field.
