@@ -4,7 +4,7 @@
     <LangVersion>7.3</LangVersion>
     <AssemblyName>BGCRBalanceDump</AssemblyName>
     <RootNamespace>NikichMods.BGCRBalanceDump</RootNamespace>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
