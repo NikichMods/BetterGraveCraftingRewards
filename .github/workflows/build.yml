@@ -1,0 +1,62 @@
+name: Build production candidate
+
+on:
+  push:
+    branches:
+      - 'dev/**'
+      - 'feature/**'
+      - main
+    paths:
+      - 'src/**'
+      - 'BetterGraveCraftingRewards.csproj'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore BetterGraveCraftingRewards.csproj
+
+      - name: Build
+        run: dotnet build BetterGraveCraftingRewards.csproj -c Release --no-restore --nologo
+
+      - name: Prepare candidate
+        shell: pwsh
+        run: |
+          $dll = Resolve-Path 'bin/Release/BetterGraveCraftingRewards.dll'
+          $out = Join-Path $PWD 'artifact'
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          $handoff = Join-Path $out 'BetterGraveCraftingRewards-0.1.0.dll'
+          Copy-Item $dll $handoff
+          $hash = (Get-FileHash $handoff -Algorithm SHA256).Hash.ToLowerInvariant()
+          @(
+            "version=0.1.0"
+            "source_sha=${{ github.sha }}"
+            "sha256=$hash"
+            "installed_assembly=BetterGraveCraftingRewards.dll"
+            "handoff_assembly=BetterGraveCraftingRewards-0.1.0.dll"
+          ) | Set-Content -Encoding UTF8 (Join-Path $out 'BUILD_IDENTITY.txt')
+          Get-Content (Join-Path $out 'BUILD_IDENTITY.txt')
+
+      - name: Upload candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: BetterGraveCraftingRewards-0.1.0-${{ github.sha }}
+          path: artifact/*
+          if-no-files-found: error
+          retention-days: 14
