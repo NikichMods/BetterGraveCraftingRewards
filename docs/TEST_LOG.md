@@ -316,3 +316,44 @@ Phase 2 — after Phase 1 passes:
 - verify mastery exhaustion/worker exclusion with the cheapest deterministic setup available.
 
 Do not request broad all-recipe manual testing unless a concrete mismatch appears.
+
+
+## BGCR Test Console 0.1.0 — production 0.1.0 acceptance harness
+
+- Status: **CI-built; user runtime evidence pending**.
+- Research branch: `research/runtime-acceptance-0.1.0`.
+- Exact harness source: `f1223eb08dc63c1aebaf6843ef00fabaff5906fa`.
+- CI run: `36356782669`.
+- Artifact ID: `10944196956`.
+- GitHub artifact: `BGCR-Test-Console-0.1.0-f1223eb08dc63c1aebaf6843ef00fabaff5906fa`.
+- Artifact ZIP digest: `sha256:beddc8296decdfdc5f64abd34453103323665abb7572e68710bc46f9ec0bdceb`.
+- Handoff DLL: `BGCR-Test-Console-0.1.0.dll`.
+- DLL SHA-256: `7655f0a6b4ac70e7c222c0f2bb5bcd538b003f02a2985b6c1ea7ea52738f2e40`.
+- Required production DLL SHA-256: `8b5a7f48fcef478bb8638e0a91c223d13f28d57fa1b2ea180d3cae2cd7ebced3`.
+- Build result: success.
+- Harness design: documented in `docs/RUNTIME_ACCEPTANCE_HARNESS.md`.
+- Research-only; must not ship with the production mod.
+
+### User procedure
+
+1. keep the exact Better Grave Crafting Rewards 0.1.0 candidate installed;
+2. add `BGCR-Test-Console-0.1.0.dll` to `BepInEx/plugins`;
+3. load the same ordinary gameplay save;
+4. press F6;
+5. press:
+   - `Validate G2 state`;
+   - `Probe mastery endpoint`;
+   - `Probe worker / Soul routing`;
+6. return `LogOutput.log`.
+
+No crafting, rare materials, item spawning, technology unlock, save editing or developer console is required.
+
+Expected diagnostic lines:
+- `BGCR_TEST_VALIDATE|pass=true|...`;
+- `BGCR_TEST_ENDPOINT|pass=true|...`;
+- `BGCR_TEST_ROUTING|pass=true|...`.
+
+Optional later cross-save check:
+- load another save normally;
+- F6 -> `Snapshot current save`;
+- use `BGCR_TEST_SAVE` to verify that live projections follow that save's own counter.
