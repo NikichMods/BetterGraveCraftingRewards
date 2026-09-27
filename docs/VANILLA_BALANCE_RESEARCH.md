@@ -407,3 +407,32 @@ It will **not** rediscover grave/material progression. It will only emit `craft_
 This is cheaper and less error-prone than reconstructing the full blue-source economy from wiki/community tables.
 
 The probe remains research-only, performs no patches and mutates no game/save state.
+
+
+## Whole-game blue recovery findings — accepted 0.4.0
+
+The 0.4.0 runtime inventory closes the recovery-path question raised by finite grave-craft mastery.
+
+Loaded Graveyard Keeper 1.407 contains:
+- 194 one-time Survey rows with positive blue output;
+- 161 non-Survey positive-blue craft rows;
+- 151 rows classified by the probe as visible, non-hidden, non-one-time, non-auto ordinary repeatable recipes.
+
+The inventory contains many non-grave repeatable blue paths in the base game, including:
+
+- anatomy/corpse operations (5-blue extraction rows and 1-blue insertion rows);
+- glass/material processing (typically 1–2 blue);
+- stone/marble component processing (1–2 blue);
+- writing: notes 3, chapter 5, hard-cover book 15;
+- printing/flyers (2–3);
+- candles (2);
+- embalming-fluid production (3);
+- prayer/sermon item production (10–15).
+
+This does not mean every source is available at every instant; individual technologies, stations and materials still gate them. It does establish the system invariant needed by this project:
+
+**finite blue mastery on grave decorations does not remove the game's wider repeatable blue economy.**
+
+A player who spends blue poorly is not dependent on an infinite grave-decoration farm as the only recovery mechanism.
+
+No further broad source enumeration is justified before balance selection.
