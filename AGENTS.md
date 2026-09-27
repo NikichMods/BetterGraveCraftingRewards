@@ -87,6 +87,20 @@ Before the first production-source mutation for each materially independent beha
 
 Keep probes and diagnostics separate from production behavior.
 
+## Runtime-test ergonomics
+
+The user's installed game is a normal play save. Do not assume a developer console, cheats, arbitrary item spawning, unlocked recipes, abundant rare materials or convenient resettable progression.
+
+Default acceptance design:
+- use a short natural gameplay action when the required state is already easy to reach on the user's save;
+- when setup would require rare materials, many repeated crafts, unavailable progression, artificial counters or destructive save manipulation, build a separate test-only harness first;
+- prefer a small user-operated panel/console with named scenario actions over typed commands or manual save editing;
+- the harness may prepare inputs or synthetic edge state, but the production/native path under test must produce the result;
+- classify any harness mutation as nonpersistent/session-persistent/save-persistent and provide obvious cleanup for persistent state;
+- never bundle the harness into the production DLL.
+
+PrayerClarity's Rebalanced Test Console is the accepted precedent for this workflow.
+
 ## Git / version / acceptance
 
 - `main` is the stable line.
