@@ -14,20 +14,41 @@ namespace NikichMods.BGCRBalanceDump
     public sealed class BalanceDumpPlugin : BaseUnityPlugin
     {
         public const string PluginGuid = "nikich.graveyardkeeper.bgcrbalancedump";
-        public const string PluginName = "BGCR Material Dump";
-        public const string PluginVersion = "0.2.0";
+        public const string PluginName = "BGCR Scope Completion Dump";
+        public const string PluginVersion = "0.3.0";
 
         private static readonly BindingFlags Inst = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         private static readonly BindingFlags Stat = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-        private static readonly HashSet<string> GraveTypes = new HashSet<string>(StringComparer.Ordinal)
+
+        private static readonly HashSet<string> RelevantOutObjects = new HashSet<string>(StringComparer.Ordinal)
         {
-            "GraveStone",
-            "GraveFence",
-            "GraveCover"
-        };
-        private static readonly HashSet<string> NonMaterialIds = new HashSet<string>(StringComparer.Ordinal)
-        {
-            "r", "g", "b", "v", "gratitude_points", "energy", "hp", "progress", "money", "durability"
+            "cooking_table",
+            "cooking_table_2",
+            "desk",
+            "desk_2",
+            "mf_anvil_1",
+            "mf_anvil_2",
+            "mf_anvil_3",
+            "mf_beam_gantry_1",
+            "mf_chocks_1",
+            "mf_furnace_0",
+            "mf_furnace_1",
+            "mf_furnace_2",
+            "mf_hammer_0",
+            "mf_hammer_1",
+            "mf_jewelry",
+            "mf_potter_wheel_1",
+            "mf_saw_1",
+            "mf_vine_press",
+            "mf_workbench_1",
+            "mf_workbench_2",
+            "mine_zombie_bench",
+            "steep_marble_2",
+            "steep_stone",
+            "tavern_kitchen",
+            "zombie_mine_fence_front",
+            "zombie_mine_fence_left_front",
+            "zombie_sawmill_completed"
         };
 
         private Assembly _gameAssembly;
@@ -35,7 +56,7 @@ namespace NikichMods.BGCRBalanceDump
 
         private void Awake()
         {
-            Logger.LogInfo("BGCR Material Dump 0.2.0 loaded. Read-only research probe.");
+            Logger.LogInfo("BGCR Scope Completion Dump 0.3.0 loaded. Read-only research probe.");
             StartCoroutine(DumpWhenReady());
         }
 
@@ -47,22 +68,24 @@ namespace NikichMods.BGCRBalanceDump
                 {
                     Type mainGameType = GameType("MainGame");
                     Type balanceType = GameType("GameBalance");
-                    bool gameStarted = ToBool(GetStatic(mainGameType, "game_started"));
-                    object balance = GetStatic(balanceType, "me");
 
-                    if (gameStarted && balance != null)
+                    if (ToBool(GetStatic(mainGameType, "game_started")))
                     {
-                        try
+                        object balance = GetStatic(balanceType, "me");
+                        if (balance != null)
                         {
-                            DumpMaterialGraph(balance);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.LogError("BGCR_MATERIAL_ERROR|" + Escape(ex.ToString()));
-                        }
+                            try
+                            {
+                                Dump(balance);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.LogError("BGCR_SCOPE_ERROR|" + Escape(ex.ToString()));
+                            }
 
-                        _dumped = true;
-                        yield break;
+                            _dumped = true;
+                            yield break;
+                        }
                     }
                 }
 
@@ -70,181 +93,162 @@ namespace NikichMods.BGCRBalanceDump
             }
         }
 
-        private void DumpMaterialGraph(object balance)
+        private void Dump(object balance)
         {
-            IList items = Get(balance, "items_data") as IList;
             IList crafts = Get(balance, "craft_data") as IList;
+            IList objectCrafts = Get(balance, "craft_obj_data") as IList;
             IList techs = Get(balance, "techs_data") as IList;
 
-            if (items == null || crafts == null || techs == null)
-                throw new InvalidOperationException("GameBalance items_data/craft_data/techs_data not available.");
+            if (crafts == null || objectCrafts == null || techs == null)
+                throw new InvalidOperationException("GameBalance craft_data/craft_obj_data/techs_data not available.");
 
-            Dictionary<string, object> itemById = new Dictionary<string, object>(StringComparer.Ordinal);
-            HashSet<string> graveIds = new HashSet<string>(StringComparer.Ordinal);
+            Logger.LogInfo("BGCR_SCOPE_BEGIN|probe=0.3.0|target=GraveyardKeeper-1.407|source=loaded-GameBalance");
 
-            foreach (object itemDef in items)
-            {
-                if (itemDef == null) continue;
-                string id = Id(itemDef);
-                if (string.IsNullOrEmpty(id)) continue;
-                if (!itemById.ContainsKey(id)) itemById[id] = itemDef;
+            int mqCount = DumpCarvedMarble(crafts, techs);
+            int techCount = DumpTechs(techs);
+            int blueprintCount = DumpRelevantBlueprints(objectCrafts, techs);
 
-                string type = Convert.ToString(Get(itemDef, "type"), CultureInfo.InvariantCulture);
-                if (GraveTypes.Contains(type)) graveIds.Add(id);
-            }
+            Logger.LogInfo(
+                "BGCR_SCOPE_DONE" +
+                "|multiquality_crafts=" + mqCount.ToString(CultureInfo.InvariantCulture) +
+                "|techs=" + techCount.ToString(CultureInfo.InvariantCulture) +
+                "|blueprints=" + blueprintCount.ToString(CultureInfo.InvariantCulture));
+        }
 
-            Dictionary<string, object> craftById = new Dictionary<string, object>(StringComparer.Ordinal);
+        private int DumpCarvedMarble(IList crafts, IList techs)
+        {
+            int count = 0;
+
             foreach (object craft in crafts)
             {
                 if (craft == null) continue;
-                string id = Id(craft);
-                if (!string.IsNullOrEmpty(id) && !craftById.ContainsKey(id)) craftById[id] = craft;
-            }
+                IList outputs = Get(craft, "output") as IList;
+                if (outputs == null) continue;
 
-            Queue<KeyValuePair<string, int>> queue = new Queue<KeyValuePair<string, int>>();
-            Dictionary<string, int> depthByMaterial = new Dictionary<string, int>(StringComparer.Ordinal);
-
-            foreach (string graveId in graveIds.OrderBy(x => x, StringComparer.Ordinal))
-            {
-                object primary;
-                if (!craftById.TryGetValue(graveId, out primary)) continue;
-
-                IList needs = Get(primary, "needs") as IList;
-                if (needs == null) continue;
-
-                foreach (object need in needs)
+                foreach (object output in outputs)
                 {
-                    string materialId = Id(need);
-                    if (!IsMaterialCandidate(materialId, graveIds)) continue;
-                    EnqueueIfNew(materialId, 0, depthByMaterial, queue);
-                }
-            }
+                    if (output == null) continue;
+                    IList variants = Get(output, "multiquality_items") as IList;
+                    if (variants == null || variants.Count == 0) continue;
 
-            Logger.LogInfo(
-                "BGCR_MATERIAL_BEGIN|probe=0.2.0|target=GraveyardKeeper-1.407|source=loaded-GameBalance" +
-                "|direct_materials=" + depthByMaterial.Count.ToString(CultureInfo.InvariantCulture));
+                    List<string> ids = new List<string>();
+                    bool carvedMarble = false;
+                    foreach (object variant in variants)
+                    {
+                        string id = Convert.ToString(variant, CultureInfo.InvariantCulture) ?? "";
+                        ids.Add(id);
+                        if (id.StartsWith("marble_plate_3:", StringComparison.Ordinal))
+                            carvedMarble = true;
+                    }
 
-            int materialCount = 0;
-            int producerCount = 0;
-            int rootCount = 0;
-            int maxDepth = 0;
+                    if (!carvedMarble) continue;
 
-            while (queue.Count > 0)
-            {
-                KeyValuePair<string, int> current = queue.Dequeue();
-                string materialId = current.Key;
-                int depth = current.Value;
-                materialCount++;
-                if (depth > maxDepth) maxDepth = depth;
-
-                object itemDef;
-                itemById.TryGetValue(materialId, out itemDef);
-
-                Logger.LogInfo(
-                    "BGCR_MATERIAL" +
-                    "|id=" + Escape(materialId) +
-                    "|depth=" + depth.ToString(CultureInfo.InvariantCulture) +
-                    "|name=" + Escape(TryDisplayName(itemDef)) +
-                    "|type=" + Escape(itemDef == null ? "" : Convert.ToString(Get(itemDef, "type"), CultureInfo.InvariantCulture)) +
-                    "|quality=" + Escape(itemDef == null ? "" : Number(Get(itemDef, "quality"))));
-
-                List<object> producers = new List<object>();
-                foreach (object craft in crafts)
-                {
-                    if (craft == null) continue;
+                    count++;
                     string craftId = Id(craft);
-                    if (!IsUsefulProducerCraft(craftId, craft)) continue;
-                    if (!ContainsItemId(Get(craft, "output") as IList, materialId)) continue;
-                    producers.Add(craft);
-                }
-
-                if (producers.Count == 0)
-                {
-                    rootCount++;
-                    Logger.LogInfo(
-                        "BGCR_MATERIAL_ROOT" +
-                        "|id=" + Escape(materialId) +
-                        "|depth=" + depth.ToString(CultureInfo.InvariantCulture));
-                    continue;
-                }
-
-                foreach (object craft in producers.OrderBy(c => Id(c), StringComparer.Ordinal))
-                {
-                    producerCount++;
-                    string craftId = Id(craft);
-                    IList outputs = Get(craft, "output") as IList;
-                    IList needs = Get(craft, "needs") as IList;
 
                     Logger.LogInfo(
-                        "BGCR_MATERIAL_CRAFT" +
-                        "|target=" + Escape(materialId) +
-                        "|depth=" + depth.ToString(CultureInfo.InvariantCulture) +
+                        "BGCR_MQ_CRAFT" +
                         "|craft=" + Escape(craftId) +
-                        "|craft_type=" + Escape(Convert.ToString(Get(craft, "craft_type"), CultureInfo.InvariantCulture)) +
-                        "|craft_in=" + Escape(StringList(Get(craft, "craft_in") as IEnumerable)) +
-                        "|needs=" + Escape(ItemList(needs)) +
+                        "|out_base=" + Escape(Id(output)) +
+                        "|variants=" + Escape(string.Join(";", ids.ToArray())) +
+                        "|needs=" + Escape(ItemList(Get(craft, "needs") as IList)) +
                         "|outputs=" + Escape(ItemList(outputs)) +
                         "|red=" + Escape(Reward(outputs, "r")) +
                         "|green=" + Escape(Reward(outputs, "g")) +
                         "|blue=" + Escape(Reward(outputs, "b")) +
                         "|energy_expr=" + Escape(ExpressionRaw(Get(craft, "energy"))) +
-                        "|energy_const=" + Escape(ExpressionConstant(Get(craft, "energy"))) +
                         "|time_expr=" + Escape(ExpressionRaw(Get(craft, "craft_time"))) +
-                        "|time_const=" + Escape(ExpressionConstant(Get(craft, "craft_time"))) +
+                        "|difficulty=" + Escape(Number(Get(craft, "difficulty"))) +
+                        "|linked_perks=" + Escape(StringList(Get(craft, "linked_perks") as IEnumerable)) +
+                        "|linked_buffs=" + Escape(StringList(Get(craft, "linked_buffs") as IEnumerable)) +
+                        "|craft_in=" + Escape(StringList(Get(craft, "craft_in") as IEnumerable)) +
                         "|techs=" + Escape(TechIdsForCraft(techs, craftId)) +
                         "|tech_prices=" + Escape(TechPricesForCraft(techs, craftId)));
-
-                    if (needs == null) continue;
-                    foreach (object need in needs)
-                    {
-                        string nextId = Id(need);
-                        if (!IsMaterialCandidate(nextId, graveIds)) continue;
-                        EnqueueIfNew(nextId, depth + 1, depthByMaterial, queue);
-                    }
                 }
             }
 
+            return count;
+        }
+
+        private int DumpTechs(IList techs)
+        {
+            int count = 0;
+            double totalR = 0d, totalG = 0d, totalB = 0d, totalV = 0d, totalGP = 0d;
+
+            foreach (object tech in techs)
+            {
+                if (tech == null) continue;
+                count++;
+
+                object price = Get(tech, "price");
+                double r = GameResGet(price, "r");
+                double g = GameResGet(price, "g");
+                double b = GameResGet(price, "b");
+                double v = GameResGet(price, "v");
+                double gp = GameResGet(price, "gratitude_points");
+
+                totalR += r;
+                totalG += g;
+                totalB += b;
+                totalV += v;
+                totalGP += gp;
+
+                Logger.LogInfo(
+                    "BGCR_TECH" +
+                    "|id=" + Escape(Id(tech)) +
+                    "|branch=" + Escape(Convert.ToString(Get(tech, "branch_type"), CultureInfo.InvariantCulture)) +
+                    "|r=" + Escape(Format(r)) +
+                    "|g=" + Escape(Format(g)) +
+                    "|b=" + Escape(Format(b)) +
+                    "|v=" + Escape(Format(v)) +
+                    "|gp=" + Escape(Format(gp)) +
+                    "|parents=" + Escape(ObjectIdList(Get(tech, "parents") as IEnumerable)) +
+                    "|crafts=" + Escape(StringList(Get(tech, "crafts") as IEnumerable)) +
+                    "|works=" + Escape(StringList(Get(tech, "works") as IEnumerable)) +
+                    "|requires_dlc=" + Escape(Convert.ToString(Get(tech, "requires_dlc"), CultureInfo.InvariantCulture)) +
+                    "|hidden=" + Escape(BoolString(Get(tech, "hidden"))) +
+                    "|invisible=" + Escape(BoolString(Get(tech, "invisible"))));
+            }
+
             Logger.LogInfo(
-                "BGCR_MATERIAL_DONE" +
-                "|materials=" + materialCount.ToString(CultureInfo.InvariantCulture) +
-                "|producer_crafts=" + producerCount.ToString(CultureInfo.InvariantCulture) +
-                "|roots=" + rootCount.ToString(CultureInfo.InvariantCulture) +
-                "|max_depth=" + maxDepth.ToString(CultureInfo.InvariantCulture));
+                "BGCR_TECH_TOTALS" +
+                "|count=" + count.ToString(CultureInfo.InvariantCulture) +
+                "|r=" + Format(totalR) +
+                "|g=" + Format(totalG) +
+                "|b=" + Format(totalB) +
+                "|v=" + Format(totalV) +
+                "|gp=" + Format(totalGP));
+
+            return count;
         }
 
-        private static bool IsMaterialCandidate(string id, HashSet<string> graveIds)
+        private int DumpRelevantBlueprints(IList objectCrafts, IList techs)
         {
-            return !string.IsNullOrEmpty(id) &&
-                   !NonMaterialIds.Contains(id) &&
-                   !graveIds.Contains(id) &&
-                   !id.StartsWith("story:", StringComparison.Ordinal);
-        }
+            int count = 0;
 
-        private static bool IsUsefulProducerCraft(string craftId, object craft)
-        {
-            if (string.IsNullOrEmpty(craftId)) return false;
-            if (craftId.StartsWith("surv:", StringComparison.Ordinal) ||
-                craftId.StartsWith("set_", StringComparison.Ordinal) ||
-                craftId.StartsWith("rem_", StringComparison.Ordinal) ||
-                craftId.StartsWith("fix_", StringComparison.Ordinal) ||
-                craftId.StartsWith("destroy_", StringComparison.Ordinal))
-                return false;
+            foreach (object craft in objectCrafts)
+            {
+                if (craft == null) continue;
 
-            string craftType = Convert.ToString(Get(craft, "craft_type"), CultureInfo.InvariantCulture);
-            return !string.Equals(craftType, "Fixing", StringComparison.Ordinal);
-        }
+                string outObj = Convert.ToString(Get(craft, "out_obj"), CultureInfo.InvariantCulture) ?? "";
+                if (!RelevantOutObjects.Contains(outObj)) continue;
 
-        private static void EnqueueIfNew(
-            string id,
-            int depth,
-            Dictionary<string, int> depthByMaterial,
-            Queue<KeyValuePair<string, int>> queue)
-        {
-            int knownDepth;
-            if (depthByMaterial.TryGetValue(id, out knownDepth) && knownDepth <= depth) return;
+                count++;
+                string craftId = Id(craft);
 
-            depthByMaterial[id] = depth;
-            queue.Enqueue(new KeyValuePair<string, int>(id, depth));
+                Logger.LogInfo(
+                    "BGCR_BLUEPRINT" +
+                    "|craft=" + Escape(craftId) +
+                    "|out_obj=" + Escape(outObj) +
+                    "|build_type=" + Escape(Convert.ToString(Get(craft, "build_type"), CultureInfo.InvariantCulture)) +
+                    "|needs=" + Escape(ItemList(Get(craft, "needs") as IList)) +
+                    "|builders=" + Escape(StringList(Get(craft, "builder_ids") as IEnumerable)) +
+                    "|locked_builders=" + Escape(StringList(Get(craft, "locked_builders_ids") as IEnumerable)) +
+                    "|techs=" + Escape(TechIdsForCraft(techs, craftId)) +
+                    "|work_techs=" + Escape(TechIdsForWork(techs, outObj)));
+            }
+
+            return count;
         }
 
         private static string TechIdsForCraft(IList techs, string craftId)
@@ -253,25 +257,42 @@ namespace NikichMods.BGCRBalanceDump
             foreach (object tech in techs)
             {
                 if (tech == null) continue;
-                if (!ContainsString(Get(tech, "crafts") as IList, craftId)) continue;
-                ids.Add(Id(tech));
+                if (ContainsString(Get(tech, "crafts") as IList, craftId))
+                    ids.Add(Id(tech));
             }
             return string.Join(";", ids.ToArray());
         }
 
         private static string TechPricesForCraft(IList techs, string craftId)
         {
-            List<string> prices = new List<string>();
+            List<string> values = new List<string>();
             foreach (object tech in techs)
             {
                 if (tech == null) continue;
                 if (!ContainsString(Get(tech, "crafts") as IList, craftId)) continue;
 
-                string id = Id(tech);
                 object price = Get(tech, "price");
-                prices.Add(id + ":" + (price == null ? "" : Convert.ToString(price, CultureInfo.InvariantCulture)));
+                values.Add(
+                    Id(tech) + ":" +
+                    Format(GameResGet(price, "r")) + "/" +
+                    Format(GameResGet(price, "g")) + "/" +
+                    Format(GameResGet(price, "b")) + "/" +
+                    Format(GameResGet(price, "v")) + "/" +
+                    Format(GameResGet(price, "gratitude_points")));
             }
-            return string.Join(";", prices.ToArray());
+            return string.Join(";", values.ToArray());
+        }
+
+        private static string TechIdsForWork(IList techs, string workId)
+        {
+            List<string> ids = new List<string>();
+            foreach (object tech in techs)
+            {
+                if (tech == null) continue;
+                if (ContainsString(Get(tech, "works") as IList, workId))
+                    ids.Add(Id(tech));
+            }
+            return string.Join(";", ids.ToArray());
         }
 
         private bool TryBindGameAssembly()
@@ -333,24 +354,46 @@ namespace NikichMods.BGCRBalanceDump
             return null;
         }
 
+        private static double GameResGet(object gameRes, string key)
+        {
+            if (gameRes == null) return 0d;
+
+            MethodInfo method = gameRes.GetType().GetMethods(Inst)
+                .FirstOrDefault(m =>
+                {
+                    if (m.Name != "Get") return false;
+                    ParameterInfo[] p = m.GetParameters();
+                    return p.Length == 2 && p[0].ParameterType == typeof(string);
+                });
+
+            if (method == null) return 0d;
+
+            try
+            {
+                object value = method.Invoke(gameRes, new object[] { key, 0f });
+                return value == null ? 0d : Convert.ToDouble(value, CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                return 0d;
+            }
+        }
+
         private static string Id(object obj)
         {
             return Get(obj, "id") as string ?? "";
         }
 
-        private static bool ContainsItemId(IList list, string id)
-        {
-            if (list == null) return false;
-            foreach (object item in list)
-                if (string.Equals(Id(item), id, StringComparison.Ordinal)) return true;
-            return false;
-        }
-
         private static bool ContainsString(IList list, string value)
         {
             if (list == null) return false;
+
             foreach (object item in list)
-                if (string.Equals(Convert.ToString(item, CultureInfo.InvariantCulture), value, StringComparison.Ordinal)) return true;
+            {
+                if (string.Equals(Convert.ToString(item, CultureInfo.InvariantCulture), value, StringComparison.Ordinal))
+                    return true;
+            }
+
             return false;
         }
 
@@ -365,7 +408,7 @@ namespace NikichMods.BGCRBalanceDump
                 sum += ToDouble(Get(item, "value"));
             }
 
-            return sum.ToString("0.###", CultureInfo.InvariantCulture);
+            return Format(sum);
         }
 
         private static string ItemList(IList list)
@@ -393,6 +436,21 @@ namespace NikichMods.BGCRBalanceDump
             return string.Join(";", result.ToArray());
         }
 
+        private static string ObjectIdList(IEnumerable values)
+        {
+            if (values == null) return "";
+
+            List<string> result = new List<string>();
+            foreach (object value in values)
+            {
+                string id = Id(value);
+                if (!string.IsNullOrEmpty(id))
+                    result.Add(id);
+            }
+
+            return string.Join(";", result.ToArray());
+        }
+
         private static string ExpressionRaw(object expression)
         {
             if (expression == null) return "";
@@ -401,49 +459,9 @@ namespace NikichMods.BGCRBalanceDump
                 .FirstOrDefault(m => m.Name == "GetRawExpressionString" && m.GetParameters().Length == 0);
 
             if (method == null) return "";
+
             object value = method.Invoke(expression, null);
             return Convert.ToString(value, CultureInfo.InvariantCulture) ?? "";
-        }
-
-        private static string ExpressionConstant(object expression)
-        {
-            string raw = ExpressionRaw(expression);
-            if (string.IsNullOrWhiteSpace(raw)) return "";
-
-            float value;
-            return float.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out value)
-                ? value.ToString("0.###", CultureInfo.InvariantCulture)
-                : "";
-        }
-
-        private static string TryDisplayName(object itemDef)
-        {
-            if (itemDef == null) return "";
-
-            try
-            {
-                MethodInfo method = itemDef.GetType().GetMethods(Inst)
-                    .FirstOrDefault(m =>
-                    {
-                        if (m.Name != "GetItemName") return false;
-                        ParameterInfo[] p = m.GetParameters();
-                        return p.Length == 1 && p[0].ParameterType == typeof(bool);
-                    });
-
-                if (method == null) return "";
-                return Convert.ToString(method.Invoke(itemDef, new object[] { true }), CultureInfo.InvariantCulture) ?? "";
-            }
-            catch
-            {
-                return "";
-            }
-        }
-
-        private static bool ToBool(object value)
-        {
-            if (value == null) return false;
-            try { return Convert.ToBoolean(value, CultureInfo.InvariantCulture); }
-            catch { return false; }
         }
 
         private static double ToDouble(object value)
@@ -455,7 +473,24 @@ namespace NikichMods.BGCRBalanceDump
 
         private static string Number(object value)
         {
-            return ToDouble(value).ToString("0.###", CultureInfo.InvariantCulture);
+            return Format(ToDouble(value));
+        }
+
+        private static string Format(double value)
+        {
+            return value.ToString("0.###", CultureInfo.InvariantCulture);
+        }
+
+        private static bool ToBool(object value)
+        {
+            if (value == null) return false;
+            try { return Convert.ToBoolean(value, CultureInfo.InvariantCulture); }
+            catch { return false; }
+        }
+
+        private static string BoolString(object value)
+        {
+            return ToBool(value) ? "true" : "false";
         }
 
         private static string Escape(string value)
