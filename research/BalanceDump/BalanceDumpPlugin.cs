@@ -75,15 +75,22 @@ namespace NikichMods.BGCRBalanceDump
             IList objects = Get(balance, "objs_data") as IList;
 
             if (crafts == null || techs == null || works == null || objects == null)
-                throw new InvalidOperationException("Required GameBalance collections are not available.");
+                throw new InvalidOperationException("GameBalance craft_data/techs_data/works_data/objs_data not available.");
 
             Logger.LogInfo("BGCR_RED_ECON_BEGIN|probe=0.5.0|target=GraveyardKeeper-1.407|source=loaded-GameBalance");
 
+            Dictionary<string, object> workById = new Dictionary<string, object>(StringComparer.Ordinal);
+            foreach (object work in works)
+            {
+                if (work == null) continue;
+                string id = Id(work);
+                if (!string.IsNullOrEmpty(id) && !workById.ContainsKey(id))
+                    workById.Add(id, work);
+            }
+
             int craftSources = 0;
-            int surveys = 0;
-            int oneTime = 0;
-            int hidden = 0;
-            int ordinaryRepeatableVisible = 0;
+            int craftSurveys = 0;
+            int craftRepeatableVisible = 0;
             double craftOnePassRed = 0d;
 
             foreach (object craft in crafts)
@@ -101,13 +108,11 @@ namespace NikichMods.BGCRBalanceDump
                 bool isSurvey = string.Equals(craftType, "Survey", StringComparison.Ordinal);
                 bool isOneTime = ToBool(Get(craft, "one_time_craft"));
                 bool isHidden = ToBool(Get(craft, "hidden"));
+                bool isAuto = ToBool(Get(craft, "is_auto"));
 
-                if (isSurvey) surveys++;
-                if (isOneTime) oneTime++;
-                if (isHidden) hidden++;
-
-                if (!isSurvey && !isOneTime && !isHidden && !ToBool(Get(craft, "is_auto")))
-                    ordinaryRepeatableVisible++;
+                if (isSurvey) craftSurveys++;
+                if (!isSurvey && !isOneTime && !isHidden && !isAuto)
+                    craftRepeatableVisible++;
 
                 string craftId = Id(craft);
                 object physical = FirstPhysicalOutput(outputs);
@@ -127,7 +132,6 @@ namespace NikichMods.BGCRBalanceDump
                     "|craft_in=" + Escape(StringList(Get(craft, "craft_in") as IEnumerable)) +
                     "|energy_expr=" + Escape(ExpressionRaw(Get(craft, "energy"))) +
                     "|time_expr=" + Escape(ExpressionRaw(Get(craft, "craft_time"))) +
-                    "|condition_expr=" + Escape(ExpressionRaw(Get(craft, "condition"))) +
                     "|hidden=" + BoolString(Get(craft, "hidden")) +
                     "|one_time=" + BoolString(Get(craft, "one_time_craft")) +
                     "|is_auto=" + BoolString(Get(craft, "is_auto")) +
@@ -150,98 +154,87 @@ namespace NikichMods.BGCRBalanceDump
 
                 workSources++;
                 workOnePassRed += red;
+                string workId = Id(work);
 
                 Logger.LogInfo(
                     "BGCR_RED_WORK" +
-                    "|id=" + Escape(Id(work)) +
+                    "|id=" + Escape(workId) +
                     "|red=" + Format(red) +
                     "|green=" + Format(GameResGet(reward, "g")) +
-                    "|blue=" + Format(GameResGet(reward, "b")));
+                    "|blue=" + Format(GameResGet(reward, "b")) +
+                    "|objects=" + Escape(ObjectIdsForWork(objects, workId)));
             }
 
             int objectSources = 0;
-            int workLinkedObjects = 0;
-            int dropObjects = 0;
-            int addParamObjects = 0;
+            int objectWorkLinks = 0;
+            int objectDropSources = 0;
+            int objectDirectParamSources = 0;
 
             foreach (object obj in objects)
             {
                 if (obj == null) continue;
 
+                string objectId = Id(obj);
                 string workId = Convert.ToString(Get(obj, "work"), CultureInfo.InvariantCulture) ?? "";
-                object linkedWork = FindById(works, workId);
-                object workReward = Get(linkedWork, "reward");
 
-                double workRed = GameResGet(workReward, "r");
-                IList dropItems = Get(obj, "drop_items") as IList;
-                double dropRed = Reward(dropItems, "r");
-                object addPlayer = Get(obj, "add_player_param_after_hp_0");
-                double addRed = GameResGet(addPlayer, "r");
+                double workRed = 0d;
+                if (!string.IsNullOrEmpty(workId))
+                {
+                    object linkedWork;
+                    if (workById.TryGetValue(workId, out linkedWork))
+                        workRed = GameResGet(Get(linkedWork, "reward"), "r");
+                }
 
-                if (workRed <= 0d && dropRed <= 0d && addRed <= 0d) continue;
+                IList drops = Get(obj, "drop_items") as IList;
+                double dropRed = Reward(drops, "r");
+                double directRed = GameResGet(Get(obj, "add_player_param_after_hp_0"), "r");
+
+                if (workRed <= 0d && dropRed <= 0d && directRed <= 0d)
+                    continue;
 
                 objectSources++;
-                if (workRed > 0d) workLinkedObjects++;
-                if (dropRed > 0d) dropObjects++;
-                if (addRed > 0d) addParamObjects++;
+                if (workRed > 0d) objectWorkLinks++;
+                if (dropRed > 0d) objectDropSources++;
+                if (directRed > 0d) objectDirectParamSources++;
 
                 Logger.LogInfo(
                     "BGCR_RED_OBJECT" +
-                    "|id=" + Escape(Id(obj)) +
+                    "|id=" + Escape(objectId) +
                     "|type=" + Escape(Convert.ToString(Get(obj, "type"), CultureInfo.InvariantCulture)) +
+                    "|zone=" + Escape(Convert.ToString(Get(obj, "zone_id"), CultureInfo.InvariantCulture)) +
                     "|work=" + Escape(workId) +
                     "|work_red=" + Format(workRed) +
-                    "|work_green=" + Format(GameResGet(workReward, "g")) +
-                    "|work_blue=" + Format(GameResGet(workReward, "b")) +
                     "|drop_red=" + Format(dropRed) +
-                    "|drop_items=" + Escape(ItemList(dropItems)) +
-                    "|add_player_red=" + Format(addRed) +
-                    "|add_player_green=" + Format(GameResGet(addPlayer, "g")) +
-                    "|add_player_blue=" + Format(GameResGet(addPlayer, "b")) +
+                    "|direct_red=" + Format(directRed) +
+                    "|drops=" + Escape(ItemList(drops)) +
+                    "|need_unlock_work=" + BoolString(Get(obj, "need_unlock_work")) +
                     "|hp_expr=" + Escape(ExpressionRaw(Get(obj, "hp"))) +
-                    "|player_cant_work=" + BoolString(Get(obj, "player_cant_work")) +
-                    "|need_unlock_work=" + BoolString(Get(obj, "need_unlock_work")));
+                    "|direct_k_expr=" + Escape(ExpressionRaw(Get(obj, "add_player_param_after_hp_0_k"))));
             }
 
             Logger.LogInfo(
                 "BGCR_RED_ECON_DONE" +
                 "|craft_sources=" + craftSources.ToString(CultureInfo.InvariantCulture) +
-                "|surveys=" + surveys.ToString(CultureInfo.InvariantCulture) +
-                "|one_time=" + oneTime.ToString(CultureInfo.InvariantCulture) +
-                "|hidden=" + hidden.ToString(CultureInfo.InvariantCulture) +
-                "|ordinary_repeatable_visible=" + ordinaryRepeatableVisible.ToString(CultureInfo.InvariantCulture) +
+                "|craft_surveys=" + craftSurveys.ToString(CultureInfo.InvariantCulture) +
+                "|craft_repeatable_visible=" + craftRepeatableVisible.ToString(CultureInfo.InvariantCulture) +
                 "|craft_one_pass_red_sum=" + Format(craftOnePassRed) +
                 "|work_sources=" + workSources.ToString(CultureInfo.InvariantCulture) +
                 "|work_one_pass_red_sum=" + Format(workOnePassRed) +
                 "|object_sources=" + objectSources.ToString(CultureInfo.InvariantCulture) +
-                "|work_linked_objects=" + workLinkedObjects.ToString(CultureInfo.InvariantCulture) +
-                "|drop_objects=" + dropObjects.ToString(CultureInfo.InvariantCulture) +
-                "|add_param_objects=" + addParamObjects.ToString(CultureInfo.InvariantCulture));
-        }
-
-        private static object FindById(IList list, string id)
-        {
-            if (list == null || string.IsNullOrEmpty(id)) return null;
-            foreach (object item in list)
-            {
-                if (item != null && string.Equals(Id(item), id, StringComparison.Ordinal))
-                    return item;
-            }
-            return null;
+                "|object_work_links=" + objectWorkLinks.ToString(CultureInfo.InvariantCulture) +
+                "|object_drop_sources=" + objectDropSources.ToString(CultureInfo.InvariantCulture) +
+                "|object_direct_param_sources=" + objectDirectParamSources.ToString(CultureInfo.InvariantCulture));
         }
 
         private static object FirstPhysicalOutput(IList outputs)
         {
             if (outputs == null) return null;
-
             foreach (object output in outputs)
             {
                 if (output == null) continue;
-                string id = Id(output);
-                if (!TechPointIds.Contains(id))
+                if (!TechPointIds.Contains(Id(output)))
                     return output;
             }
-
             return null;
         }
 
@@ -252,24 +245,33 @@ namespace NikichMods.BGCRBalanceDump
             return Convert.ToString(Get(def, "type"), CultureInfo.InvariantCulture) ?? "";
         }
 
+        private static string ObjectIdsForWork(IList objects, string workId)
+        {
+            List<string> ids = new List<string>();
+            foreach (object obj in objects)
+            {
+                if (obj == null) continue;
+                if (string.Equals(Convert.ToString(Get(obj, "work"), CultureInfo.InvariantCulture), workId, StringComparison.Ordinal))
+                    ids.Add(Id(obj));
+            }
+            return string.Join(";", ids.ToArray());
+        }
+
         private static string TechIdsForCraft(IList techs, string craftId)
         {
             List<string> ids = new List<string>();
-
             foreach (object tech in techs)
             {
                 if (tech == null) continue;
                 if (ContainsString(Get(tech, "crafts") as IList, craftId))
                     ids.Add(Id(tech));
             }
-
             return string.Join(";", ids.ToArray());
         }
 
         private static string TechMetaForCraft(IList techs, string craftId)
         {
             List<string> values = new List<string>();
-
             foreach (object tech in techs)
             {
                 if (tech == null) continue;
@@ -285,41 +287,30 @@ namespace NikichMods.BGCRBalanceDump
                     ",b=" + Format(GameResGet(price, "b")) +
                     "]");
             }
-
             return string.Join(";", values.ToArray());
         }
 
         private bool TryBindGameAssembly()
         {
             if (_gameAssembly != null) return true;
-
             _gameAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .FirstOrDefault(a => string.Equals(a.GetName().Name, "Assembly-CSharp", StringComparison.Ordinal));
-
             return _gameAssembly != null;
         }
 
         private Type GameType(string name)
         {
             if (_gameAssembly == null) return null;
-
             Type direct = _gameAssembly.GetType(name, false);
             if (direct != null) return direct;
 
-            try
-            {
-                return _gameAssembly.GetTypes().FirstOrDefault(t => t != null && t.Name == name);
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                return ex.Types.FirstOrDefault(t => t != null && t.Name == name);
-            }
+            try { return _gameAssembly.GetTypes().FirstOrDefault(t => t != null && t.Name == name); }
+            catch (ReflectionTypeLoadException ex) { return ex.Types.FirstOrDefault(t => t != null && t.Name == name); }
         }
 
         private static object Get(object obj, string name)
         {
             if (obj == null) return null;
-
             for (Type t = obj.GetType(); t != null; t = t.BaseType)
             {
                 FieldInfo field = t.GetField(name, Inst);
@@ -328,14 +319,12 @@ namespace NikichMods.BGCRBalanceDump
                 PropertyInfo property = t.GetProperty(name, Inst);
                 if (property != null && property.CanRead) return property.GetValue(obj, null);
             }
-
             return null;
         }
 
         private static object GetStatic(Type type, string name)
         {
             if (type == null) return null;
-
             for (Type t = type; t != null; t = t.BaseType)
             {
                 FieldInfo field = t.GetField(name, Stat);
@@ -344,7 +333,6 @@ namespace NikichMods.BGCRBalanceDump
                 PropertyInfo property = t.GetProperty(name, Stat);
                 if (property != null && property.CanRead) return property.GetValue(null, null);
             }
-
             return null;
         }
 
@@ -356,52 +344,44 @@ namespace NikichMods.BGCRBalanceDump
         private static double Reward(IList output, string id)
         {
             if (output == null) return 0d;
-
             double sum = 0d;
             foreach (object item in output)
             {
                 if (!string.Equals(Id(item), id, StringComparison.Ordinal)) continue;
                 sum += ToDouble(Get(item, "value"));
             }
-
             return sum;
         }
 
         private static string ItemList(IList list)
         {
             if (list == null) return "";
-
             List<string> values = new List<string>();
             foreach (object item in list)
             {
                 if (item == null) continue;
                 values.Add(Id(item) + ":" + Format(ToDouble(Get(item, "value"))));
             }
-
             return string.Join(";", values.ToArray());
         }
 
         private static string StringList(IEnumerable values)
         {
             if (values == null) return "";
-
             List<string> result = new List<string>();
             foreach (object value in values)
                 result.Add(Convert.ToString(value, CultureInfo.InvariantCulture) ?? "");
-
             return string.Join(";", result.ToArray());
         }
 
         private static bool ContainsString(IList list, string value)
         {
             if (list == null) return false;
-
             foreach (object item in list)
             {
                 if (string.Equals(Convert.ToString(item, CultureInfo.InvariantCulture), value, StringComparison.Ordinal))
                     return true;
             }
-
             return false;
         }
 
@@ -433,10 +413,8 @@ namespace NikichMods.BGCRBalanceDump
         private static string ExpressionRaw(object expression)
         {
             if (expression == null) return "";
-
             MethodInfo method = expression.GetType().GetMethods(Inst)
                 .FirstOrDefault(m => m.Name == "GetRawExpressionString" && m.GetParameters().Length == 0);
-
             if (method == null) return "";
 
             object value = method.Invoke(expression, null);
