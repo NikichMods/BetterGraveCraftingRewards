@@ -1,0 +1,59 @@
+name: Build BGCR test console
+
+on:
+  push:
+    branches:
+      - 'research/**'
+    paths:
+      - 'research/TestConsole/**'
+      - '.github/workflows/research-test-console.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore research/TestConsole/BGCRTestConsole.csproj
+
+      - name: Build
+        run: dotnet build research/TestConsole/BGCRTestConsole.csproj -c Release --no-restore --nologo
+
+      - name: Prepare artifact
+        shell: pwsh
+        run: |
+          $dll = Resolve-Path 'research/TestConsole/bin/Release/BGCRTestConsole.dll'
+          $out = Join-Path $PWD 'artifact'
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          $handoff = Join-Path $out 'BGCR-Test-Console-0.1.0.dll'
+          Copy-Item $dll $handoff
+          $hash = (Get-FileHash $handoff -Algorithm SHA256).Hash.ToLowerInvariant()
+          @(
+            "version=0.1.0"
+            "source_sha=${{ github.sha }}"
+            "sha256=$hash"
+            "handoff_assembly=BGCR-Test-Console-0.1.0.dll"
+            "requires_production_sha256=8b5a7f48fcef478bb8638e0a91c223d13f28d57fa1b2ea180d3cae2cd7ebced3"
+          ) | Set-Content -Encoding UTF8 (Join-Path $out 'BUILD_IDENTITY.txt')
+          Get-Content (Join-Path $out 'BUILD_IDENTITY.txt')
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: BGCR-Test-Console-0.1.0-${{ github.sha }}
+          path: artifact/*
+          if-no-files-found: error
+          retention-days: 14
