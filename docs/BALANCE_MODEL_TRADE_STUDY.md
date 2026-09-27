@@ -363,3 +363,120 @@ Later recyclable items remain stronger but require more advanced components and/
 3. Should late DLC recipes remain capped at 15 for vanilla character, or should the very highest tiers rise above 15?
 
 Until these are decided, C1 is a comparison candidate only and production remains BLOCKED.
+
+
+## Model E — Discovery-weighted redistribution
+
+### Motivation
+
+Move part of the repeatable blue reward out of grave-decoration crafting and into the existing one-time Survey/Study reward for the same item.
+
+Player-facing intent:
+
+- early repeat crafting becomes a weak fallback rather than the efficient progression route;
+- increasingly advanced grave crafts can still pay somewhat more than early crafts;
+- the first time a player makes and studies a new decoration remains strongly rewarding;
+- repeated dismantle/recraft loops lose most of their advantage;
+- no new persistent first-craft state is required because vanilla Study already supplies the one-time state.
+
+### Exact vanilla scale
+
+Accepted runtime data contains:
+
+- 24 grave-decoration Study recipes;
+- total Study faith cost: **145 Faith**;
+- total grave-decoration Study blue output: **1544 blue**;
+- one-of-each final-craft blue checksum across 42 grave decorations: **266 blue**;
+- reconstructed all-DLC technology-tree blue cost: **3715 blue**.
+
+Therefore, for the simple first-copy checksum `one craft of every decoration + every available Study`, Study already contributes about **85.3%** of the blue associated with grave decorations.
+
+Average current grave-decoration Study efficiency is about **10.65 blue per Faith**.
+
+Illustrative redistribution without changing Faith cost:
+
+- moving +50 blue into existing Study rewards -> 1594 Study blue, ~10.99 blue/Faith;
+- moving +75 -> 1619 Study blue, ~11.17 blue/Faith;
+- moving +100 -> 1644 Study blue, ~11.34 blue/Faith.
+
+This is a modest efficiency increase rather than a new Faith-cost burden.
+
+### Important distinction: Faith cost vs Faith dependence
+
+Increasing the `b` output of existing Survey recipes does **not** consume additional Faith if their `needs` entries stay unchanged.
+
+The behavioral change is instead:
+
+- more of the player's blue progression becomes contingent on using the Study table;
+- Faith timing therefore matters more;
+- players who ignore sermons / spend Faith heavily elsewhere have less access to repeatable grave-craft catch-up.
+
+This distinction matters for evaluating pacing.
+
+### Early-game concentration
+
+The 12 wood/stone Study recipes through the two vanilla stone sculptures consume **37 Faith** and pay **362 blue** in the accepted dataset.
+
+Thus the early/mid game already asks the player to route a meaningful amount of Faith into knowledge progression before marble. Shifting too much additional blue away from crafting could make a missed sermon or competing Faith use feel more punitive even if total Faith cost is unchanged.
+
+### Strong implementation form: first-copy package conservation
+
+For studyable decorations whose repeat craft reward is reduced:
+
+`new Study blue = old Study blue + (old Craft blue - new Craft blue)`
+
+Example:
+
+- Stone grave fence: vanilla first-copy package = 5 craft + 31 Study = 36.
+- If repeat craft is reduced to 2, set Study to 34.
+- A normal player who crafts one and studies it still receives 36 total.
+- A grinder receives only 2 per additional craft instead of 5.
+
+This is a particularly clean anti-grind transformation because it changes repeat incentives without silently taxing the intended `craft one -> study it -> use it` progression.
+
+The same rule does not have to be applied to every advanced item. Later recipes can receive a modest craft increase where progression currently has a zero-reward hole; that becomes an explicit progression bonus rather than compensation.
+
+### Non-studyable DLC constraint
+
+18 of the 42 identified grave-decoration items do not currently expose a Survey recipe in the accepted dataset.
+
+Creating new Survey recipes for them would broaden the mechanism, introduce new Faith/Science costs and require separate host/UI acceptance.
+
+Therefore the first implementation should **not** create new Study recipes merely to preserve a global point budget.
+
+For non-studyable DLC decorations:
+- prefer leaving existing craft reward unchanged unless progression evidence justifies a direct adjustment;
+- evaluate them separately from the studyable vanilla/core line.
+
+### Community evidence
+
+Community discussion strongly supports both sides of this tradeoff:
+
+- Players repeatedly describe Study as the intended/main source of early blue and advise against crafting items solely for point yield because that loop is boring.
+- The Stone grave fence is repeatedly recommended as the cheap repeatable escape valve: two stone -> 5 blue, dismantle -> one stone back.
+- Recent 2026 discussions still recommend this route, so the incentive has not disappeared through ordinary player discovery.
+- Other players explicitly complain that Study is constrained by weekly Faith and competing Faith uses; some describe the Faith gate itself as frustrating.
+- One detailed community criticism compares the high Faith/material effort of studying advanced marble decoration against simply mass-producing Stone grave fence II for equivalent blue. That is almost exactly the failure mode this mod is intended to remove.
+
+Interpretation:
+- moving reward toward Study is aligned with the game's thematic/intended knowledge loop;
+- eliminating repeatable craft blue entirely would over-correct because the craft path currently acts as a catch-up / escape valve from Faith timing;
+- the strongest direction is therefore **Study-heavy, not Study-only**.
+
+### Updated leading direction
+
+Model E is now favored over C1 as the conceptual base, with a small progression curve retained on repeat crafting.
+
+Recommended structure before exact values:
+
+1. keep wood at 0 repeat blue;
+2. reduce cheap recyclable early stone crafts substantially;
+3. retain a small repeatable floor so players cannot become effectively Faith-gated;
+4. allow advanced stone / marble repeat craft rewards to rise gradually, but slower than recipe/resource sophistication;
+5. move the removed early/mid repeatable budget into the corresponding existing Study rewards;
+6. prefer per-item first-copy package conservation where practical;
+7. preserve existing Study Faith/Science costs;
+8. do not add Survey recipes to currently non-studyable DLC decorations in the first behavior change;
+9. leave component-craft blue and non-grave blue sources untouched.
+
+C1 remains useful as a comparison candidate but is no longer the preferred conceptual model.
