@@ -110,3 +110,47 @@ Allowed work while BLOCKED:
 Not allowed:
 - production reward mutation;
 - final balance values presented as accepted behavior.
+
+
+## Static ownership findings — 2026-09-27
+
+**Status: verified static facts for Graveyard Keeper 1.407 source reference used by accepted NikichMods research.**
+
+Reference: `Kupie/GYK_DECOMP@6abf79199d92482af1c7573870dd9a20ec2270b9`.
+
+Established:
+
+- `GameBalance.items_data` is the native item-definition collection.
+- Grave-decoration item families are represented by native `ItemDefinition.ItemType` values `GraveStone`, `GraveFence`, and `GraveCover`.
+- `ItemDefinition.quality` is the base item quality field used by the grave UI path through `Item.GetItemQuality()`.
+- `GameBalance.craft_data` owns ordinary craft and Survey definitions.
+- A `CraftDefinition` contains native `needs`, `output`, `craft_in`, `energy`, and `craft_time` data.
+- Technology points are ordinary craft outputs: `TechDefinition.TECH_POINTS` contains `r`, `g`, `b`, `v`, and `gratitude_points`; `CraftDefinition.GetFirstRealOutput()` explicitly skips these IDs when finding the physical output.
+- `CraftComponent.ProcessFinishedCraft()` processes `current_craft.output` through the normal native output/drop path. Therefore repeatable red/green/blue craft rewards are data in the recipe output, not a separate grave-decoration reward algorithm.
+- `ItemDefinition.GetSurveyCraft()` resolves the item's Survey recipe from `GameBalance.craft_data`; Survey tech-point rewards are likewise stored in that recipe's `output`.
+- `GameBalance.techs_data` owns technology definitions. `TechDefinition.crafts` identifies crafts unlocked by a technology and `TechDefinition.price` is the native technology cost.
+
+### Implementation implication
+
+The leading implementation family is now **host-owned data mutation**: change only the verified `r/g/b` output entries of the selected native grave-decoration craft definitions while leaving `CraftComponent` and the normal reward/drop algorithm intact.
+
+This is not yet READY for production because the exact affected 1.407 recipe IDs/values and complete progression table still need authoritative loaded-data evidence.
+
+## Research probe decision
+
+A new narrow probe is justified.
+
+The missing information is stored in loaded balance data rather than executable method bodies. Reconstructing the complete table manually in-game would require many crafts, Study actions and transcribed values, while a read-only dump can enumerate the canonical collections directly.
+
+Probe contract:
+
+- diagnostic identity: `BGCR Balance Dump 0.1.0`;
+- branch: `research/vanilla-balance-dump`;
+- read only;
+- no Harmony patches;
+- no mutation of `GameBalance`, recipes, player state or save state;
+- wait until the game has started, dump once, then become inert;
+- enumerate native grave-decoration items and their producer/consumer/Survey/technology relationships;
+- output machine-readable `BGCR_*` log lines for later analysis.
+
+Expected runtime action: install the diagnostic DLL, load any save until normal gameplay is active, then return `LogOutput.log`. No crafting or other gameplay action should be necessary.
