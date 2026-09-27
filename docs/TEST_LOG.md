@@ -264,7 +264,41 @@ Probe acceptance target is satisfied for the project decision. No follow-up runt
 - Marble sarcophagus excluded;
 - qualitative Study-value tooltip cue **not included**.
 
-### Runtime acceptance plan
+### Runtime acceptance result — Phase 1
+
+User-returned log: `LogOutput(20260927-224127).log`.
+
+Accepted observations:
+- Graveyard Keeper 1.407 loaded Better Grave Crafting Rewards 0.1.0;
+- startup reported `G2 active | designs=41 | craftVariants=47 | studies=23`;
+- no Better Grave Crafting Rewards warning/error was emitted;
+- `grave_bot_stn_1` completed sequence was:
+  - #1: awarded 5R/5B, next 5R/5B;
+  - #2: awarded 5R/5B, next 4R/4B;
+  - #3: awarded 4R/4B, next 4R/4B;
+  - #4: awarded 4R/4B, next 3R/3B;
+- crafts #2-#4 were requested as one three-item multicraft/queue and decayed per completed item, proving queue behavior;
+- the game was saved, returned to menu, and the same save was reloaded;
+- startup re-projected G2 for the loaded save;
+- #5 then awarded 3R/3B, proving save persistence and non-reset after reload.
+
+**Phase 1 status: PASS.**
+
+### Research-method checkpoint before Phase 2
+
+The remaining acceptance states are not all guaranteed to be cheap or naturally reachable on the user's ordinary save:
+- formerly zero-blue Marble recipe;
+- controlled Study verification;
+- alternate manufacturing variant identity;
+- near-exhausted mastery;
+- ordinary worker exclusion;
+- Soul Gratitude completion.
+
+Do not ask the user to grind materials, exhaust a long mastery sequence, edit saves or rely on unavailable cheats/developer console.
+
+Before those checks, create a **separate test-only user-operated harness** following `NikichMods/DevRules/RUNTIME_TEST_HARNESS.md`. It may prepare the minimum inputs/state required for the scenario, but each assertion must still exercise the actual production/native path. Production `BetterGraveCraftingRewards.dll` remains unchanged by test UI/tools.
+
+### Original Phase 1 procedure — retained for provenance
 
 Phase 1 — one early design, minimal proof:
 1. install only this candidate in place of BGCR research probes;
