@@ -44,7 +44,7 @@ jobs:
           source='research/BalanceDump/bin/Release/BGCRBalanceDump.dll'
           test -f "$source"
           mkdir -p artifacts
-          target='artifacts/BGCR Material Dump 0.2.0.dll'
+          target='artifacts/BGCR Scope Completion Dump 0.3.0.dll'
           cp "$source" "$target"
           hash="$(sha256sum "$target" | awk '{print $1}')"
           echo "SHA-256: $hash"
@@ -53,7 +53,7 @@ jobs:
       - name: Upload diagnostic DLL
         uses: actions/upload-artifact@v4
         with:
-          name: BGCR-Material-Dump-0.2.0
-          path: artifacts/BGCR Material Dump 0.2.0.dll
+          name: BGCR-Scope-Completion-Dump-0.3.0
+          path: artifacts/BGCR Scope Completion Dump 0.3.0.dll
           if-no-files-found: error
           retention-days: 7
