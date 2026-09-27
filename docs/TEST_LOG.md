@@ -48,8 +48,15 @@ Research conclusion:
 ## BGCR Material Dump 0.2.0
 
 - Purpose: recursively enumerate native producer chains behind direct grave-decoration crafting materials.
-- Status: **source prepared; CI/runtime evidence pending**.
+- Status: **CI-built; runtime evidence pending**.
 - Research branch: `research/vanilla-balance-dump`.
+- Exact built source state: `caf3d66435567b299397e3ecb71b1bf9479d1f13`.
+- CI run: `36285157007`.
+- GitHub Actions artifact: `10920272311` (`BGCR-Material-Dump-0.2.0`).
+- Handed DLL: `BGCR Material Dump 0.2.0.dll`.
+- DLL SHA-256: `b35ccf013197d04a2f0b39f50ab65901592d457b5a9cd003a4981750ec383537`.
+- Artifact ZIP digest reported by GitHub: `sha256:b77c9319150dc542ca2babfa71b058d19680fddf19a9a64bcc392874dae4e509`.
+- Build result: success.
 - Safety: read-only, no Harmony patches, no save mutation.
 - Evidence target:
   1. no `BGCR_MATERIAL_ERROR`;
