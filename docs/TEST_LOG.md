@@ -184,8 +184,15 @@ Conclusion:
 ## BGCR Red Economy Dump 0.5.0
 
 - Purpose: inventory positive-red production/work/object reward paths needed to evaluate red grind and red progression.
-- Status: **source prepared; CI/runtime evidence pending**.
+- Status: **CI-built; runtime evidence pending**.
 - Research branch: `research/vanilla-balance-dump`.
+- Exact built source state: `9e7251b14a7640bf53af9046efc23c96915dc43d`.
+- CI run: `36351939021`.
+- GitHub Actions artifact: `10942581753` (`BGCR-Red-Economy-Dump-0.5.0`).
+- Handed DLL: `BGCR-Red-Economy-Dump-0.5.0.dll`.
+- DLL SHA-256: `e4914d8cb8377f2af0209b9c100258842da64d3d8d5f6b6f820975ee2847fd22`.
+- Artifact ZIP digest: `sha256:9b3ac95f24bb2fe893a517c00f1a3f774dfefdb3e39672a50edc44c2a4e185b9`.
+- Build result: success.
 - Safety: read-only, no Harmony patches, no game/save mutation.
 - Evidence target:
   1. no `BGCR_RED_ECON_ERROR`;
