@@ -383,3 +383,19 @@ After the 0.1.1 release-hardening candidate passed technical acceptance, the pro
 The first public stable release is therefore version **1.0.0**.
 
 The already-handed/recorded 0.1.0 and 0.1.1 binaries remain immutable evidence artifacts. They are not renamed or republished as 1.0.0. Version 1.0.0 receives a fresh deterministic CI build whose executable change from 0.1.1 is version metadata only.
+
+
+## Stable candidate 1.0.0 — ACCEPTED
+
+- Exact source: `0a971830a62f29f78738a0219610299ebe32428b`
+- CI run: `36361332183`
+- Artifact ID: `10945069959`
+- Artifact: `BetterGraveCraftingRewards-1.0.0-0a971830a62f29f78738a0219610299ebe32428b`
+- Handoff DLL: `BetterGraveCraftingRewards-1.0.0.dll`
+- DLL SHA-256: `804f3aec98e070c5f41babd5c5343e87fe2bab37b30f5f2ae7571097b988edba`
+- Artifact ZIP digest: `sha256:a2ac25413160e8d7380cdfb76cd764f6d2c8295078f777751922a88e30713427`
+- CI result: **success, 0 warnings, 0 errors**
+
+Static comparison against the technically accepted 0.1.1 production state shows no G2 behavior change. Production differences are version metadata only.
+
+The 1.0.0 artifact is therefore accepted for stable promotion without another installed-runtime pass.

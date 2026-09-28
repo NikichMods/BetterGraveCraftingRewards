@@ -76,3 +76,19 @@ Therefore:
 - **0.1.0** remains the immutable runtime-acceptance handoff;
 - **0.1.1** remains the immutable release-hardening candidate;
 - no public 0.x release is created.
+
+
+## 1.0.0 accepted stable artifact
+
+- Exact source SHA: `0a971830a62f29f78738a0219610299ebe32428b`
+- CI run: `36361332183`
+- Artifact ID: `10945069959`
+- Artifact name: `BetterGraveCraftingRewards-1.0.0-0a971830a62f29f78738a0219610299ebe32428b`
+- Handoff DLL: `BetterGraveCraftingRewards-1.0.0.dll`
+- Installed DLL identity: `BetterGraveCraftingRewards.dll`
+- DLL SHA-256: `804f3aec98e070c5f41babd5c5343e87fe2bab37b30f5f2ae7571097b988edba`
+- Artifact ZIP digest: `sha256:a2ac25413160e8d7380cdfb76cd764f6d2c8295078f777751922a88e30713427`
+- Build result: **success, 0 warnings, 0 errors**
+- Production diff from technically accepted 0.1.1: version metadata only.
+- Stable artifact status: **ACCEPTED**.
+- Additional installed-runtime evidence required: **none**.

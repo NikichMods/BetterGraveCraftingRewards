@@ -295,3 +295,15 @@ Accepted evidence covers:
 - Soul Gratitude routing.
 
 Study-tooltip UX has been moved out of BGCR scope to the separate Study Reward Insight project.
+
+
+## Stable packaging closure — 1.0.0
+
+Version 1.0.0 introduces no new production behavior gate. It is the public stable identity for the already accepted implementation.
+
+Compared with the technically accepted 0.1.1 production source, the 1.0.0 production diff changes only version metadata. CI run `36361332183` succeeded with 0 warnings and 0 errors.
+
+Exact accepted stable source: `0a971830a62f29f78738a0219610299ebe32428b`.
+DLL SHA-256: `804f3aec98e070c5f41babd5c5343e87fe2bab37b30f5f2ae7571097b988edba`.
+
+**Stable packaging: ACCEPTED.**
