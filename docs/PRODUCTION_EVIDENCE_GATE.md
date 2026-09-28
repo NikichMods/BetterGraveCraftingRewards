@@ -224,27 +224,48 @@ Candidate runtime must prove:
 
 ## Change C — qualitative Study-value cue in item tooltip
 
-**Status: BLOCKED**
+**Status: MOVED OUT OF BGCR SCOPE**
 
-The host presentation seam is known:
-`ItemDefinition.GetTooltipData()` already renders the incomplete Survey line using the Survey output's technology-point colors while deliberately hiding numeric quantities.
+The idea is retained as research history only. Qualitative or numeric Study-reward preview is a broader Graveyard Keeper information-UX problem and belongs to the separate **Study Reward Insight** project.
 
-Still unresolved:
-- exact user-facing visual language;
-- threshold bands across the whole Study reward distribution;
-- localization strategy.
-
-This is an independent UX behavior and must not be bundled into the first mastery candidate merely to reduce test cycles.
+No Study-tooltip implementation should be added to Better Grave Crafting Rewards.
 
 ## Integration decision
 
-Changes A and B are both **READY** and may share the first production candidate because:
-- both operate on the accepted G2 data model;
-- their owners/consumers are independently established;
-- combined runtime evidence remains attributable;
-- Change C remains excluded while BLOCKED.
+Changes A and B were implemented together because both operate on the accepted G2 data model and their combined runtime evidence remained attributable.
 
-No further runtime research probe is required before the first production implementation of A+B.
+No additional Study-tooltip behavior is part of BGCR.
+
+
+## Change D — remove acceptance-only per-craft mastery logging
+
+**Status: READY**
+
+### Observable property
+
+Successful mastery crafts no longer emit one `BGCR_MASTERY` Info line per completed item into the shared BepInEx log.
+
+### Canonical owner / final output path
+
+- owner: `MasteryRuntime.CommitCompletedDesign()`;
+- output: `Plugin.Log.LogInfo(...)` through the BepInEx `ManualLogSource`.
+
+### Blast radius
+
+Only successful in-scope mastery-craft Info logging before mastery exhaustion.
+
+### Preserved invariants
+
+- mastery reward arithmetic unchanged;
+- counter increment/persistence unchanged;
+- per-save projection unchanged;
+- startup summary retained;
+- host/mod mismatch warnings retained;
+- fail-closed error logging retained.
+
+### Acceptance evidence
+
+Static diff must show only removal of the log call and its now-unused local reward calculations from the mastery path. A clean Release build must succeed. No repeated gameplay acceptance pass is required because the already-accepted reward/state path is unchanged.
 
 
 ## Runtime acceptance closure
@@ -263,4 +284,4 @@ Accepted evidence covers:
 - worker exclusion;
 - Soul Gratitude routing.
 
-Change C (qualitative Study-value tooltip cue) remains **BLOCKED** as a separate UX behavior.
+Study-tooltip UX has been moved out of BGCR scope to the separate Study Reward Insight project.

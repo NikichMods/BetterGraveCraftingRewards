@@ -2,7 +2,7 @@
 
 Target: **Graveyard Keeper 1.407**
 
-Status: **product model accepted; production implementation pending evidence gates**
+Status: **accepted product model; production behavior runtime accepted**
 
 Evidence basis:
 - accepted grave-recipe / Study / recycle dump 0.1.0;

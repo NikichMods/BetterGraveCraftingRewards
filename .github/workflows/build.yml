@@ -29,6 +29,18 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Read version
+        id: meta
+        shell: pwsh
+        run: |
+          [xml]$project = Get-Content 'BetterGraveCraftingRewards.csproj' -Raw
+          $version = [string]$project.Project.PropertyGroup.Version
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            throw 'Project Version is missing.'
+          }
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Version: $version"
+
       - name: Restore
         run: dotnet restore BetterGraveCraftingRewards.csproj
 
@@ -38,25 +50,26 @@ jobs:
       - name: Prepare candidate
         shell: pwsh
         run: |
+          $version = '${{ steps.meta.outputs.version }}'
           $dll = Resolve-Path 'bin/Release/BetterGraveCraftingRewards.dll'
           $out = Join-Path $PWD 'artifact'
           New-Item -ItemType Directory -Force -Path $out | Out-Null
-          $handoff = Join-Path $out 'BetterGraveCraftingRewards-0.1.0.dll'
+          $handoff = Join-Path $out "BetterGraveCraftingRewards-$version.dll"
           Copy-Item $dll $handoff
           $hash = (Get-FileHash $handoff -Algorithm SHA256).Hash.ToLowerInvariant()
           @(
-            "version=0.1.0"
+            "version=$version"
             "source_sha=${{ github.sha }}"
             "sha256=$hash"
             "installed_assembly=BetterGraveCraftingRewards.dll"
-            "handoff_assembly=BetterGraveCraftingRewards-0.1.0.dll"
+            "handoff_assembly=BetterGraveCraftingRewards-$version.dll"
           ) | Set-Content -Encoding UTF8 (Join-Path $out 'BUILD_IDENTITY.txt')
           Get-Content (Join-Path $out 'BUILD_IDENTITY.txt')
 
       - name: Upload candidate
         uses: actions/upload-artifact@v4
         with:
-          name: BetterGraveCraftingRewards-0.1.0-${{ github.sha }}
+          name: BetterGraveCraftingRewards-${{ steps.meta.outputs.version }}-${{ github.sha }}
           path: artifact/*
           if-no-files-found: error
           retention-days: 14
