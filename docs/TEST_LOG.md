@@ -349,3 +349,28 @@ All runtime acceptance items for Changes A+B are now satisfied:
 **Better Grave Crafting Rewards 0.1.0 G2 mechanics: RUNTIME ACCEPTED.**
 
 The research-only BGCR Test Console is no longer required for ordinary use and must not ship with production.
+
+
+## Production release-hardening candidate 0.1.1
+
+Purpose: remove acceptance-only per-craft mastery logging and prepare the already runtime-accepted G2 implementation for stable distribution without reusing the handed 0.1.0 version.
+
+- Branch: `dev/0.1.1`
+- Exact source: `bad22b61450efdcacaaaf74b4ee305b9904c6b8b`
+- CI run: `36360595338`
+- Artifact ID: `10945591816`
+- Artifact: `BetterGraveCraftingRewards-0.1.1-bad22b61450efdcacaaaf74b4ee305b9904c6b8b`
+- Handoff DLL: `BetterGraveCraftingRewards-0.1.1.dll`
+- DLL SHA-256: `a8bbce8237e627fe2413eac97548d9f02b2b76280dbd065e65130c96a4e9f950`
+- Artifact ZIP digest: `sha256:62d2a3788c080b04951a07f495205d011d61b9700de8c64e98f0dd9b3e12b863`
+- CI result: **success, 0 warnings, 0 errors**
+
+Static production diff from runtime-accepted 0.1.0:
+- version metadata `0.1.0 -> 0.1.1`;
+- MPL-2.0 SPDX comments added to source files;
+- `BGCR_MASTERY` Info logging and the two locals used only to format that log removed;
+- mastery counter mutation, save persistence, reward projection, Study mutation, worker routing and Soul Gratitude routing unchanged.
+
+Acceptance method followed the approved Change D gate: static diff + clean Release build. No repeated installed-runtime G2 pass is required because executable gameplay behavior other than logging is unchanged.
+
+**0.1.1 release-hardening candidate: TECHNICALLY ACCEPTED.**
