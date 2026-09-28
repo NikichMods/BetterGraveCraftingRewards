@@ -239,7 +239,7 @@ No additional Study-tooltip behavior is part of BGCR.
 
 ## Change D — remove acceptance-only per-craft mastery logging
 
-**Status: READY**
+**Status: ACCEPTED**
 
 ### Observable property
 
@@ -266,6 +266,16 @@ Only successful in-scope mastery-craft Info logging before mastery exhaustion.
 ### Acceptance evidence
 
 Static diff must show only removal of the log call and its now-unused local reward calculations from the mastery path. A clean Release build must succeed. No repeated gameplay acceptance pass is required because the already-accepted reward/state path is unchanged.
+
+### Acceptance result
+
+Accepted on production candidate **0.1.1**:
+- exact source: `bad22b61450efdcacaaaf74b4ee305b9904c6b8b`;
+- production diff from accepted 0.1.0 changes only version metadata, MPL SPDX comments, and removal of the `BGCR_MASTERY` log plus its now-unused local calculations;
+- CI run `36360595338`: **success**, 0 warnings, 0 errors;
+- handed DLL SHA-256: `a8bbce8237e627fe2413eac97548d9f02b2b76280dbd065e65130c96a4e9f950`.
+
+No Graveyard Keeper runtime retest was required because the accepted reward/counter/projection path is unchanged.
 
 
 ## Runtime acceptance closure
