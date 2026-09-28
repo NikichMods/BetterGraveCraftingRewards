@@ -13,7 +13,7 @@ namespace BetterGraveCraftingRewards
     {
         public const string PluginGuid = "nikich.graveyardkeeper.bettergravecraftingrewards";
         public const string PluginName = "Better Grave Crafting Rewards";
-        public const string PluginVersion = "0.1.1";
+        public const string PluginVersion = "1.0.0";
 
         internal static ManualLogSource Log;
 

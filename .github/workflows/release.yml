@@ -1,10 +1,15 @@
 name: Publish accepted release
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'release/RELEASE_MANIFEST.txt'
   workflow_dispatch:
     inputs:
       version:
-        description: Accepted version, for example 0.1.1
+        description: Accepted version, for example 1.0.0
         required: true
         type: string
       source_sha:
@@ -19,6 +24,10 @@ on:
         description: Expected SHA-256 of the accepted handed DLL
         required: true
         type: string
+      artifact_name:
+        description: Exact GitHub Actions artifact name
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -30,25 +39,75 @@ jobs:
     timeout-minutes: 10
 
     steps:
+      - name: Checkout release state
+        uses: actions/checkout@v4
+
+      - name: Resolve accepted identity
+        id: meta
+        shell: pwsh
+        run: |
+          if ('${{ github.event_name }}' -eq 'push') {
+            $manifestPath = 'release/RELEASE_MANIFEST.txt'
+            if (-not (Test-Path $manifestPath)) { throw 'Release manifest is missing.' }
+
+            $manifest = @{}
+            Get-Content $manifestPath | ForEach-Object {
+              $parts = $_ -split '=', 2
+              if ($parts.Length -eq 2) { $manifest[$parts[0]] = $parts[1] }
+            }
+
+            $version = $manifest['version']
+            $sourceSha = $manifest['source_sha']
+            $buildRunId = $manifest['build_run_id']
+            $dllSha256 = $manifest['dll_sha256']
+            $artifactName = $manifest['artifact_name']
+          }
+          else {
+            $version = '${{ inputs.version }}'
+            $sourceSha = '${{ inputs.source_sha }}'
+            $buildRunId = '${{ inputs.build_run_id }}'
+            $dllSha256 = '${{ inputs.dll_sha256 }}'
+            $artifactName = '${{ inputs.artifact_name }}'
+          }
+
+          foreach ($value in @($version, $sourceSha, $buildRunId, $dllSha256, $artifactName)) {
+            if ([string]::IsNullOrWhiteSpace($value)) { throw 'Release identity is incomplete.' }
+          }
+
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "source_sha=$sourceSha" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "build_run_id=$buildRunId" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "dll_sha256=$dllSha256" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "artifact_name=$artifactName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
       - name: Checkout accepted source
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_sha }}
+          ref: ${{ steps.meta.outputs.source_sha }}
+
+      - name: Verify source version
+        shell: pwsh
+        run: |
+          [xml]$project = Get-Content 'BetterGraveCraftingRewards.csproj' -Raw
+          $projectVersion = [string]$project.Project.PropertyGroup.Version
+          if ($projectVersion -ne '${{ steps.meta.outputs.version }}') {
+            throw "Project version $projectVersion does not match accepted release version."
+          }
 
       - name: Download exact accepted artifact
         uses: actions/download-artifact@v4
         with:
-          name: BetterGraveCraftingRewards-${{ inputs.version }}-${{ inputs.source_sha }}
+          name: ${{ steps.meta.outputs.artifact_name }}
           path: accepted
           github-token: ${{ github.token }}
-          run-id: ${{ inputs.build_run_id }}
+          run-id: ${{ steps.meta.outputs.build_run_id }}
 
       - name: Verify identity and prepare stable filename
         shell: pwsh
         run: |
-          $version = '${{ inputs.version }}'
-          $sourceSha = '${{ inputs.source_sha }}'
-          $expectedHash = '${{ inputs.dll_sha256 }}'.ToLowerInvariant()
+          $version = '${{ steps.meta.outputs.version }}'
+          $sourceSha = '${{ steps.meta.outputs.source_sha }}'
+          $expectedHash = '${{ steps.meta.outputs.dll_sha256 }}'.ToLowerInvariant()
           $identityPath = Join-Path $PWD 'accepted/BUILD_IDENTITY.txt'
           $handoff = Join-Path $PWD "accepted/BetterGraveCraftingRewards-$version.dll"
 
@@ -68,7 +127,7 @@ jobs:
           $actualHash = (Get-FileHash $handoff -Algorithm SHA256).Hash.ToLowerInvariant()
           if ($actualHash -ne $expectedHash) { throw 'Actual DLL hash mismatch.' }
 
-          $releaseDir = Join-Path $PWD 'release'
+          $releaseDir = Join-Path $PWD 'release-output'
           New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
           Copy-Item $handoff (Join-Path $releaseDir 'BetterGraveCraftingRewards.dll')
 
@@ -80,8 +139,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          gh release create "v${{ inputs.version }}" \
-            "release/BetterGraveCraftingRewards.dll#BetterGraveCraftingRewards.dll" \
-            --target "${{ inputs.source_sha }}" \
-            --title "Better Grave Crafting Rewards ${{ inputs.version }}" \
+          gh release create "v${{ steps.meta.outputs.version }}" \
+            "release-output/BetterGraveCraftingRewards.dll#BetterGraveCraftingRewards.dll" \
+            --target "${{ steps.meta.outputs.source_sha }}" \
+            --title "Better Grave Crafting Rewards ${{ steps.meta.outputs.version }}" \
             --notes-file docs/RELEASE_NOTES.md

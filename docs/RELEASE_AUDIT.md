@@ -10,7 +10,7 @@ The handed 0.1.0 source was `3c8b9c744ee77f51ebfb9b60bbf57b6acc2e24a9`. All comm
 
 ## Release hardening decision
 
-The public release line advances to **0.1.1** because production bytes are intentionally changed after the numbered 0.1.0 handoff.
+The accepted release-hardening candidate was **0.1.1** because production bytes changed after the numbered 0.1.0 handoff. Before any public release, the project was declared feature-complete for its intended scope, so the first public stable version is **1.0.0**. The 0.1.1 artifact remains an immutable internal candidate and is not renamed.
 
 The only gameplay-adjacent production change is removal of `BGCR_MASTERY` per-craft Info logging. That logging was acceptance telemetry: it could emit up to 780 shared-log lines across the full G2 mastery pool and mostly repeated already-accepted deterministic reward arithmetic.
 
@@ -34,22 +34,22 @@ No reward calculation, counter mutation, save format, recipe projection, Study m
 - [x] Nexus-facing description prepared.
 - [x] MPL-2.0 root license and `LICENSING.md` present.
 - [x] SPDX headers added to production C# source.
-- [x] Version advanced to 0.1.1 because bytes changed after the immutable 0.1.0 handoff.
+- [x] Version advanced to 1.0.0 for the first public stable release; prior 0.1.0/0.1.1 artifacts remain immutable.
 - [x] Candidate workflow derives artifact version from project metadata instead of hardcoding 0.1.0.
 - [x] Release workflow promotes an exact accepted CI artifact by run/source/hash instead of rebuilding it.
-- [x] Clean 0.1.1 CI build recorded.
-- [x] Exact 0.1.1 artifact identity/hash recorded.
+- [x] Clean 0.1.1 release-hardening CI build recorded.
+- [x] Exact 0.1.1 release-hardening artifact identity/hash recorded.
 - [ ] Stable source promoted to `main`.
-- [ ] GitHub Release `v0.1.1` published from the exact accepted artifact.
+- [ ] GitHub Release `v1.0.0` published from the exact accepted artifact.
 
-## Acceptance requirement for 0.1.1
+## Acceptance requirement for stable 1.0.0
 
-No new Graveyard Keeper runtime regression pass is required if review confirms the 0.1.1 production diff is limited to:
+No new Graveyard Keeper runtime regression pass is required. The 0.1.1 release-hardening candidate already proved the only gameplay-adjacent cleanup. The 1.0.0 production diff from accepted 0.1.1 is limited to version metadata and release documentation. The earlier accepted 0.1.1 production diff was limited to:
 - removing the acceptance-only log call and now-unused local calculations;
 - version metadata;
 - source-license comments.
 
-A clean Release build plus static diff against the runtime-accepted 0.1.0 gameplay source is sufficient for this release-hardening change.
+A clean 1.0.0 Release build plus static diff against the technically accepted 0.1.1 production source is sufficient for stable release.
 
 
 ## 0.1.1 candidate identity
@@ -65,3 +65,14 @@ A clean Release build plus static diff against the runtime-accepted 0.1.0 gamepl
 - Build result: **success, 0 warnings, 0 errors**
 - Technical acceptance: **PASS**
 - Additional installed-runtime evidence required: **none**
+
+
+## Stable-version decision
+
+The project is complete for its declared BGCR scope and has no unresolved design, balance, implementation, runtime-acceptance, licensing, or release-readiness blocker.
+
+Therefore:
+- **1.0.0** is the first public stable version;
+- **0.1.0** remains the immutable runtime-acceptance handoff;
+- **0.1.1** remains the immutable release-hardening candidate;
+- no public 0.x release is created.

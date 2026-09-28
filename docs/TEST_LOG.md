@@ -374,3 +374,12 @@ Static production diff from runtime-accepted 0.1.0:
 Acceptance method followed the approved Change D gate: static diff + clean Release build. No repeated installed-runtime G2 pass is required because executable gameplay behavior other than logging is unchanged.
 
 **0.1.1 release-hardening candidate: TECHNICALLY ACCEPTED.**
+
+
+## Stable version selection — 1.0.0
+
+After the 0.1.1 release-hardening candidate passed technical acceptance, the project scope was reviewed as complete with no unresolved design or implementation questions.
+
+The first public stable release is therefore version **1.0.0**.
+
+The already-handed/recorded 0.1.0 and 0.1.1 binaries remain immutable evidence artifacts. They are not renamed or republished as 1.0.0. Version 1.0.0 receives a fresh deterministic CI build whose executable change from 0.1.1 is version metadata only.

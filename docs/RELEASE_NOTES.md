@@ -1,8 +1,8 @@
-# Better Grave Crafting Rewards 0.1.1
+# Better Grave Crafting Rewards 1.0.0
 
-Initial public release.
+Initial public stable release.
 
-This version replaces the incentive to endlessly repeat one cheap grave-decoration recipe with finite per-design mastery. More advanced grave decorations start with stronger technology-point rewards, repeated crafting gradually teaches less, and existing grave-decoration Study rewards remain meaningful one-time knowledge events.
+Better Grave Crafting Rewards replaces the incentive to endlessly repeat one cheap grave-decoration recipe with finite per-design mastery. More advanced grave decorations start with stronger technology-point rewards, repeated crafting gradually teaches less, and existing grave-decoration Study rewards remain meaningful one-time knowledge events.
 
 Key behavior:
 - 41 supported grave-decoration designs;

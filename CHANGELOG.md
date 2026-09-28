@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.1 — Initial public release
+## 1.0.0 — Initial public release
 
 - Added the accepted G2 grave-decoration reward model for 41 active designs.
 - Added finite per-design red mastery and blue mastery from Stone gravestones onward.
