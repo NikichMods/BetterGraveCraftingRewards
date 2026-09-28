@@ -112,3 +112,15 @@ Stable promotion completed successfully.
 The automatic post-promotion build on `main` also succeeded, but because its source commit included documentation/release-manifest changes it produced different DLL bytes (`31bad71b2138dcb594e5830573158d41c92213443453ac4fceb9404cbf23c6b2`). That artifact was never handed out or published and is **not canonical**.
 
 To prevent future ambiguity, the build workflow now keeps the `main` build as a compile check only. Candidate artifact preparation/upload is restricted to development/feature refs. Stable publication continues to promote the exact accepted artifact recorded in the release manifest.
+
+
+## Final CI hygiene verification
+
+Workflow-hardening verification run `36361649029` completed successfully on `main`.
+
+- compile/restore/build: **success**;
+- `Prepare candidate`: **skipped**;
+- `Upload candidate`: **skipped**;
+- uploaded artifacts: **none**.
+
+This confirms that stable-branch checks no longer create a second downloadable artifact identity for an already accepted version.

@@ -419,3 +419,14 @@ Stable promotion and publication completed.
 A separate automatic build of the promoted `main` state (run `36361478243`) succeeded with 0 warnings and 0 errors but produced DLL SHA-256 `31bad71b2138dcb594e5830573158d41c92213443453ac4fceb9404cbf23c6b2`. It is a noncanonical CI artifact from a later documentation-bearing source commit and was never released or handed out.
 
 The build workflow was subsequently hardened so `main` remains compile-checked but no longer uploads candidate artifacts. This preserves a single unambiguous downloadable identity per accepted release.
+
+
+## Final main CI hygiene check
+
+Run `36361649029` validated the post-release workflow policy:
+- build succeeded;
+- candidate preparation skipped on `main`;
+- candidate upload skipped on `main`;
+- no workflow artifact was created.
+
+**Repository release workflow hygiene: PASS.**
