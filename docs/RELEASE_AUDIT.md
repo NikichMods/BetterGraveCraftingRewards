@@ -37,8 +37,8 @@ No reward calculation, counter mutation, save format, recipe projection, Study m
 - [x] Version advanced to 0.1.1 because bytes changed after the immutable 0.1.0 handoff.
 - [x] Candidate workflow derives artifact version from project metadata instead of hardcoding 0.1.0.
 - [x] Release workflow promotes an exact accepted CI artifact by run/source/hash instead of rebuilding it.
-- [ ] Clean 0.1.1 CI build recorded.
-- [ ] Exact 0.1.1 artifact identity/hash recorded.
+- [x] Clean 0.1.1 CI build recorded.
+- [x] Exact 0.1.1 artifact identity/hash recorded.
 - [ ] Stable source promoted to `main`.
 - [ ] GitHub Release `v0.1.1` published from the exact accepted artifact.
 
@@ -50,3 +50,18 @@ No new Graveyard Keeper runtime regression pass is required if review confirms t
 - source-license comments.
 
 A clean Release build plus static diff against the runtime-accepted 0.1.0 gameplay source is sufficient for this release-hardening change.
+
+
+## 0.1.1 candidate identity
+
+- Source SHA: `bad22b61450efdcacaaaf74b4ee305b9904c6b8b`
+- CI run: `36360595338`
+- Artifact ID: `10945591816`
+- Artifact name: `BetterGraveCraftingRewards-0.1.1-bad22b61450efdcacaaaf74b4ee305b9904c6b8b`
+- Handoff DLL: `BetterGraveCraftingRewards-0.1.1.dll`
+- Installed DLL identity: `BetterGraveCraftingRewards.dll`
+- DLL SHA-256: `a8bbce8237e627fe2413eac97548d9f02b2b76280dbd065e65130c96a4e9f950`
+- Artifact ZIP digest: `sha256:62d2a3788c080b04951a07f495205d011d61b9700de8c64e98f0dd9b3e12b863`
+- Build result: **success, 0 warnings, 0 errors**
+- Technical acceptance: **PASS**
+- Additional installed-runtime evidence required: **none**
