@@ -48,6 +48,7 @@ jobs:
         run: dotnet build BetterGraveCraftingRewards.csproj -c Release --no-restore --nologo
 
       - name: Prepare candidate
+        if: github.ref != 'refs/heads/main'
         shell: pwsh
         run: |
           $version = '${{ steps.meta.outputs.version }}'
@@ -67,6 +68,7 @@ jobs:
           Get-Content (Join-Path $out 'BUILD_IDENTITY.txt')
 
       - name: Upload candidate
+        if: github.ref != 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: BetterGraveCraftingRewards-${{ steps.meta.outputs.version }}-${{ github.sha }}

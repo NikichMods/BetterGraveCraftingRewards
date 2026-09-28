@@ -399,3 +399,23 @@ The already-handed/recorded 0.1.0 and 0.1.1 binaries remain immutable evidence a
 Static comparison against the technically accepted 0.1.1 production state shows no G2 behavior change. Production differences are version metadata only.
 
 The 1.0.0 artifact is therefore accepted for stable promotion without another installed-runtime pass.
+
+
+## Stable publication — v1.0.0
+
+Stable promotion and publication completed.
+
+- `main` promotion state: `d1a1612676efdf46b504736a9cae48461ea5f5f3`
+- Release workflow run: `36361478396` — **success**
+- GitHub Release ID: `397867204`
+- Tag: `v1.0.0`
+- Tag/release target: accepted source `0a971830a62f29f78738a0219610299ebe32428b`
+- Release asset ID: `594058668`
+- Asset filename: `BetterGraveCraftingRewards.dll`
+- Asset SHA-256: `804f3aec98e070c5f41babd5c5343e87fe2bab37b30f5f2ae7571097b988edba`
+- Asset digest matches the accepted stable candidate exactly.
+- Release state: public, stable, not a prerelease.
+
+A separate automatic build of the promoted `main` state (run `36361478243`) succeeded with 0 warnings and 0 errors but produced DLL SHA-256 `31bad71b2138dcb594e5830573158d41c92213443453ac4fceb9404cbf23c6b2`. It is a noncanonical CI artifact from a later documentation-bearing source commit and was never released or handed out.
+
+The build workflow was subsequently hardened so `main` remains compile-checked but no longer uploads candidate artifacts. This preserves a single unambiguous downloadable identity per accepted release.

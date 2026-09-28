@@ -39,8 +39,8 @@ No reward calculation, counter mutation, save format, recipe projection, Study m
 - [x] Release workflow promotes an exact accepted CI artifact by run/source/hash instead of rebuilding it.
 - [x] Clean 0.1.1 release-hardening CI build recorded.
 - [x] Exact 0.1.1 release-hardening artifact identity/hash recorded.
-- [ ] Stable source promoted to `main`.
-- [ ] GitHub Release `v1.0.0` published from the exact accepted artifact.
+- [x] Stable source promoted to `main`.
+- [x] GitHub Release `v1.0.0` published from the exact accepted artifact.
 
 ## Acceptance requirement for stable 1.0.0
 
@@ -92,3 +92,23 @@ Therefore:
 - Production diff from technically accepted 0.1.1: version metadata only.
 - Stable artifact status: **ACCEPTED**.
 - Additional installed-runtime evidence required: **none**.
+
+
+## Stable publication closure
+
+Stable promotion completed successfully.
+
+- Stable branch promotion commit: `d1a1612676efdf46b504736a9cae48461ea5f5f3`
+- GitHub Release: `v1.0.0`
+- Release ID: `397867204`
+- Release workflow run: `36361478396` — **success**
+- Release target: exact accepted source `0a971830a62f29f78738a0219610299ebe32428b`
+- Release asset ID: `594058668`
+- Published asset: `BetterGraveCraftingRewards.dll`
+- Published asset SHA-256: `804f3aec98e070c5f41babd5c5343e87fe2bab37b30f5f2ae7571097b988edba`
+- Published asset digest matches the accepted 1.0.0 DLL exactly.
+- Release is public, non-draft and non-prerelease.
+
+The automatic post-promotion build on `main` also succeeded, but because its source commit included documentation/release-manifest changes it produced different DLL bytes (`31bad71b2138dcb594e5830573158d41c92213443453ac4fceb9404cbf23c6b2`). That artifact was never handed out or published and is **not canonical**.
+
+To prevent future ambiguity, the build workflow now keeps the `main` build as a compile check only. Candidate artifact preparation/upload is restricted to development/feature refs. Stable publication continues to promote the exact accepted artifact recorded in the release manifest.

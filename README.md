@@ -34,8 +34,9 @@ Removing the mod leaves those namespaced parameters inert. Reinstalling the mod 
 ## Installation
 
 1. Install BepInEx 5 for Graveyard Keeper.
-2. Copy `BetterGraveCraftingRewards.dll` into `Graveyard Keeper/BepInEx/plugins`.
-3. Start the game.
+2. Download `BetterGraveCraftingRewards.dll` from the [latest GitHub Release](https://github.com/NikichMods/BetterGraveCraftingRewards/releases/latest).
+3. Copy it into `Graveyard Keeper/BepInEx/plugins`.
+4. Start the game.
 
 Do not install the research-only BGCR Test Console for normal play.
 
