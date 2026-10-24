@@ -430,3 +430,29 @@ Run `36361649029` validated the post-release workflow policy:
 - no workflow artifact was created.
 
 **Repository release workflow hygiene: PASS.**
+
+## Residual red candidate 1.1.0 — build verified; runtime pending
+
+- Branch: `dev/red-reward-floor`
+- Exact candidate source: `605689123b18d5dc78f745da7a8337d3f76358cd`
+- Purpose: retain red floors 1/2/3/4/5 for wood / ordinary core stone / core stone sculptures / core marble / all supported DLC designs.
+- Product model: `RED_REWARD_REVISION.md`; production gate: Change E.
+- CI run: `40043141589` — **success**.
+- CI command: `dotnet build BetterGraveCraftingRewards.csproj -c Release --no-restore --nologo`.
+- Build: 0 warnings, 0 errors; project/plugin/assembly/file version consistency passed.
+- Actual source-rule tests: all 41 designs, paired boundaries, negative and large counts, exhausted-save floor, unchanged blue formula and counter keys/caps — **PASS**, locally and in CI.
+- Baseline table comparison: all 41 rule rows match stable 1.0.0 apart from the explicit red floor — **PASS**.
+- Additional local compilation against installed BepInEx/Harmony/Unity references: **PASS**, warning-free. Its `compile-check.dll` is verification-only, not the handed/installed binary.
+- CI artifact ID: `12540321669`.
+- Artifact name: `BetterGraveCraftingRewards-1.1.0-605689123b18d5dc78f745da7a8337d3f76358cd`.
+- ZIP SHA-256: `a437c17f4dd403221d42256d34761aff72d678cd875eabe867e2f5b3cc17347f`.
+- Handoff DLL: `BetterGraveCraftingRewards-1.1.0.dll`.
+- DLL SHA-256: `7ad14247244b5dc5fef4ebd749907ebd1efb60500d4db28d350c7c684c0f10ad`.
+- Assembly/file version: `1.1.0.0`.
+- CI ZIP downloaded and hash verified; extracted DLL hash/version verified against BUILD_IDENTITY.txt before installation.
+- Installed exact CI DLL under the canonical filename with the game closed; installed hash matches. Previous installed stable 1.0.0 was verified against its accepted hash and preserved outside the plugin directory. Machine-specific installation record and rollback payload are in ignored `artifacts/` storage.
+- Local dependency restore encountered BepInEx package-download timeouts and was stopped after the clean CI build succeeded; no package substitution was used.
+
+Next runtime observation: craft an exhausted core stone fence/headstone and confirm **2 red, 0 blue**, plus the normal physical decoration; verify the same projection after reload and at an equivalent workstation where available. If an exhausted design is not naturally available, reassess a bounded test setup instead of asking for many repetitions or save editing.
+
+**Not yet established:** new candidate loading in the game, native residual reward observation, reload/variant acceptance and player approval. Stable `main` and the public 1.0.0 release remain unchanged.
