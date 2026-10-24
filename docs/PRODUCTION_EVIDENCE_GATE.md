@@ -6,6 +6,39 @@ Accepted product model: **G2**, documented in `UNIFIED_BALANCE_CANDIDATE.md`.
 
 This record applies the DevRules per-change evidence gate before any production-source mutation.
 
+## Change E — residual red manufacturing rewards (1.1.0 candidate)
+
+**Status: READY for implementation; runtime acceptance pending.**
+
+The user adopted residual red rewards: wooden designs 1, ordinary core stone
+plates/fences/crosses/markers (including the stone stella) 2, core stone
+sculptures 3, all core marble designs 4, all 22 supported DLC designs 5.
+The floor applies during paired decay, not as an extra reward after exhaustion:
+`red = max(S - floor(completed / 2), floor)`; blue retains its original formula.
+
+- Owner: per-design `BalanceRule` and `MasteryRuntime.ProjectRule`, projecting
+  into the native manufacturing `CraftDefinition.output` red total.
+- Final consumer: the unchanged `ProcessFinishedCraft` -> `DropItems` path
+  accepted under Change B. The postfix still projects the next reward; load
+  projects the existing save count. No new hooks or save fields are needed.
+- Blast radius: red totals for 41 supported designs and their validated station
+  variants, including native player-awarding Soul Gratitude production. The
+  ordinary worker path still strips technology points.
+- Preserved: starts, blue/Study/green, counter keys/caps/increment ordering,
+  materials, energy/time, physical outputs, installation/removal/repair,
+  unrelated crafts, mismatch guards and vanilla restoration on runtime failure.
+  Existing exhausted designs immediately receive the floor on the next craft.
+- Evidence: compile the production code; execute the actual BalanceRules source
+  against independent per-design expected floors and boundary/large counts,
+  verifying unchanged blue, starts and save counter bounds. Inspect the actual
+  projection diff and build version consistency. Native runtime acceptance:
+  an exhausted design must emit its floor in red, zero blue and normal physical
+  output; verify reload and shared workstation projection. Reuse unchanged
+  completion/worker-routing acceptance from 1.0.0.
+
+The 1.0.0 finite-red statements below are historical accepted evidence; Change E
+supersedes red-to-zero for the candidate only. Stable 1.0.0 remains unchanged.
+
 ## Change A — static grave Study blue rebalance
 
 **Status: ACCEPTED**

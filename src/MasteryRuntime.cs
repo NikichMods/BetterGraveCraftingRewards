@@ -294,9 +294,7 @@ namespace BetterGraveCraftingRewards
             if (!VariantsByDesign.TryGetValue(rule.DesignId, out states))
                 return;
 
-            int red = rule.RewardAfterCompleted(
-                rule.RedStart,
-                completedCount);
+            int red = rule.RedRewardAfterCompleted(completedCount);
 
             int blue = rule.RewardAfterCompleted(
                 rule.BlueStart,

@@ -8,6 +8,7 @@ on:
       - main
     paths:
       - 'src/**'
+      - 'tests/**'
       - 'BetterGraveCraftingRewards.csproj'
       - '.github/workflows/build.yml'
   workflow_dispatch:
@@ -38,11 +39,22 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($version)) {
             throw 'Project Version is missing.'
           }
+          $plugin = Get-Content 'src/Plugin.cs' -Raw
+          if ($plugin -notmatch 'PluginVersion = "([^"]+)"' -or $Matches[1] -ne $version) {
+            throw 'PluginVersion does not match project Version.'
+          }
+          if ([string]$project.Project.PropertyGroup.AssemblyVersion -ne "$version.0" -or
+              [string]$project.Project.PropertyGroup.FileVersion -ne "$version.0") {
+            throw 'Assembly/FileVersion does not match project Version.'
+          }
           "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           Write-Host "Version: $version"
 
       - name: Restore
         run: dotnet restore BetterGraveCraftingRewards.csproj
+
+      - name: Check reward rules
+        run: dotnet run --project tests/BalanceRules.Tests.csproj -c Release
 
       - name: Build
         run: dotnet build BetterGraveCraftingRewards.csproj -c Release --no-restore --nologo

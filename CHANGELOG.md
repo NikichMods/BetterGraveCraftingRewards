@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 — Development candidate; runtime acceptance pending
+
+- Red manufacturing mastery now stops at a residual reward: wood 1, ordinary core stone decorations 2, core stone sculptures 3, core marble decorations 4, all supported DLC decorations 5.
+- Existing mastery counts are preserved; exhausted designs immediately receive the residual red reward.
+- Blue mastery, starting rewards, Study and all other crafting behavior are unchanged.
+
 ## 1.0.0 — Initial public release
 
 - Added the accepted G2 grave-decoration reward model for 41 active designs.

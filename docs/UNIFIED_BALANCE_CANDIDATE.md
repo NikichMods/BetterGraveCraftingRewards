@@ -2,7 +2,11 @@
 
 Target: **Graveyard Keeper 1.407**
 
-Status: **accepted product model; production behavior runtime accepted**
+Status: **accepted 1.0.0 baseline; production behavior runtime accepted**.
+
+For the 1.1.0 candidate, [RED_REWARD_REVISION.md](RED_REWARD_REVISION.md)
+supersedes only red-to-zero and finite-red-pool statements below. Starting
+rewards, blue mastery and Study values remain the accepted baseline.
 
 Evidence basis:
 - accepted grave-recipe / Study / recycle dump 0.1.0;
